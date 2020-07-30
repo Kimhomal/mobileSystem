@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="am.main.service.impl.MainPageMapper">
+
+    <!-- 아이디, 패스워드 존재 유무 체크 -->
+    <select id="selectLoginUserInfo" resultType="egovMap">
+		
+		SELECT CASE WHEN ( SELECT COALESCE(MAX(USER_ID), 'N') FROM public.tbl_user_info WHERE USER_ID = #{searchUserId} ) = #{searchUserId} THEN 'Y' ELSE 'N' END AS ID_FLAG
+			  ,CASE WHEN ( SELECT COALESCE(MAX(USER_PWD), 'N') FROM public.tbl_user_info WHERE USER_ID = #{searchUserId} AND USER_PWD = fn_encrypt(#{searchUserPwd}) ) = fn_encrypt(#{searchUserPwd}) THEN 'Y' ELSE 'N' END AS PWD_FLAG
+			  ,CASE WHEN ( SELECT COALESCE(MAX(IP_ADDR), 'N') FROM public.tbl_user_info WHERE USER_ID = #{searchUserId} ) = #{searchIpAddr} THEN 'Y' ELSE 'N' END AS IP_FLAG
+			  ,(SELECT COALESCE(MAX(err_cnt), 0) FROM public.tbl_user_info WHERE USER_ID = #{searchUserId} ) as err_cnt
+			  ,(select current_date - pwd_chg_dt::date as pwd_chg_dt from public.tbl_user_info where user_id = #{searchUserId}) as diff_pwd_days
+			  ,(select current_date - access_dt::date as access_dt from public.tbl_user_info where user_id = #{searchUserId}) as diff_access_days
+			  ,(select COALESCE(MAX(appr_gbn), 'N') from public.tbl_user_info where user_id = #{searchUserId}) as appr_gbn
+			  ,(select COALESCE(MAX(use_flag), 'N') from public.tbl_user_info where user_id = #{searchUserId}) as use_flag
+		FROM public.tbl_user_info
+		GROUP BY 1, 2
+		
+	</select>
+
+    <!-- 패스워드 에러횟수 조회 -->
+    <select id="selectErrorCnt" resultType="integer">
+		
+		SELECT COALESCE(MAX(ERR_CNT), 0) AS ERR_CNT FROM public.tbl_user_info WHERE USER_ID = #{searchUserId}
+	
+	</select>
+
+    <!-- 패스워드 오류 카운트 초기화 -->
+    <update id="updateInitErrorCnt">
+	
+		UPDATE public.tbl_user_info SET ERR_CNT = 0 WHERE USER_ID = #{searchUserId}
+		
+	</update>
+
+    <!-- 패스워드 오류 횟수 업데이트 -->
+    <update id="updateErrorCnt">
+	
+		UPDATE public.tbl_user_info SET ERR_CNT = (SELECT COALESCE(ERR_CNT, 0) + 1 FROM public.tbl_user_info WHERE USER_ID = #{searchUserId})
+		WHERE USER_ID = #{searchUserId}
+	
+	</update>
+    <!-- 접속날짜 update -->
+    <update id="updateAccessDate">
+		
+		update public.tbl_user_info set access_dt = to_char(current_date, 'YYYYMMDD')
+		where user_id = #{searchUserId}
+		
+	</update>
+
+    <!-- 사용자 정보 조회 -->
+    <select id="selectUserInfo" resultType="egovMap">
+		
+		select a.user_id
+			  ,a.user_nm
+			  ,a.user_pwd
+			  ,a.tel_no
+			  ,a.user_privil
+			  ,a.err_cnt
+			  ,a.ip_addr
+			  ,a.mail_addr
+			  ,a.user_organ
+			  ,b.organ_nm
+			  ,a.user_dpt
+			  ,b.dpt_nm
+			  ,b.organ_cd
+			  ,c.grade_arr1
+			  ,c.grade_arr2
+			  ,c.grade_arr3
+			  ,c.grade_array_cnt::text
+		  from public.tbl_user_info a,
+			  (
+			  	select a.std_code as organ_code
+					  ,a.std_nm as organ_nm
+					  ,b.std_code as dpt_code
+					  ,b.std_nm as dpt_nm
+					  ,b.std_attr2 as organ_cd
+				from public.tbl_std_code a, public.tbl_std_code b
+				where a.std_grp = 'ORGAN'
+				and a.std_code = b.std_grp
+				and a.use_flag = 'Y'
+				and b.use_flag = 'Y'
+			  ) b,
+			  (
+				select distinct user_privil, grade_arr[1] as grade_arr1 , grade_arr[2] as grade_arr2, grade_arr[3] as grade_arr3
+					  ,(select count(arrayColumn) from unnest(grade_arr) arrayColumn) as grade_array_cnt
+				from public.tbl_user_privil
+				order by 1
+			  ) c
+		 where a.user_dpt = b.dpt_code
+		   and a.user_privil = c.user_privil
+		   and a.user_id = #{searchUserId}
+		   and a.use_flag = 'Y'
+		   and a.appr_gbn = 'Y'
+	
+	</select>
+
+    <!-- IP로 사용자 정보 조회 -->
+    <select id="selectUserInfoByIp" resultType="egovMap">
+	
+		select a.user_id
+			  ,a.user_nm
+			  ,a.user_privil
+			  ,a.ip_addr
+		  from public.tbl_user_info a,
+			  (
+			  	select a.std_code as organ_code
+					  ,a.std_nm as organ_nm
+					  ,b.std_code as dpt_code
+					  ,b.std_nm as dpt_nm
+					  ,b.std_attr2 as organ_cd
+				from public.tbl_std_code a, public.tbl_std_code b
+				where a.std_grp = 'ORGAN'
+				and a.std_code = b.std_grp
+				and a.use_flag = 'Y'
+				and b.use_flag = 'Y'
+			  ) b
+		 where a.user_dpt = b.dpt_code
+		   and ip_addr = #{ipAddr}
+		   and a.use_flag = 'Y'
+		   and a.appr_gbn = 'Y'
+	
+	</select>
+
+    <!-- 회원가입 -->
+    <insert id="insertUserInfo">
+	
+		insert into public.tbl_user_info
+		(
+			user_id, user_nm, user_pwd, tel_no, ip_addr, mail_addr, user_organ, user_dpt,
+			pwd_chg_dt, access_dt, appr_gbn, err_cnt, use_flag, 
+			ins_user, ins_dt, ins_tm,
+			upt_user, upt_dt, upt_tm
+		)
+		values
+		(
+			#{userId}, #{userNm}, fn_encrypt(#{userPwd}), #{telNo}, #{ipAddr}, #{mailAddr}, #{userOrgan}, #{userDpt},
+			to_char(current_date, 'yyyymmdd'), to_char(current_date, 'yyyymmdd'), 'N', 0, 'Y',
+			#{insUser}, to_char(now(), 'YYYYMMDD'), to_char(now(), 'HH24MISS'),
+			#{uptUser}, to_char(now(), 'YYYYMMDD'), to_char(now(), 'HH24MISS')
+		) 
+	
+	</insert>
+	
+	<!-- 회원정보수정 -->
+	<update id="updateUserInfo">
+	
+		update public.tbl_user_info
+		set user_nm = #{userNm}
+		<if test="userPwd != null and userPwd != ''">
+		   ,user_pwd = fn_encrypt(#{userPwd})
+		   ,pwd_chg_dt = to_char(current_date, 'yyyymmdd')
+		</if>
+		   ,tel_no = #{telNo}
+		   ,mail_addr = #{mailAddr}
+		   <!-- ,ip_addr = #{ipAddr} -->
+		   ,upt_user = #{userId}
+		   ,upt_dt = to_char(current_date, 'yyyymmdd')
+		   ,upt_tm = to_char(now(), 'hh24miss')
+		where user_id = #{userId}
+		   
+	</update>
+	
+	<!-- 아이디 중복확인 -->
+	<select id="uniqueUserIdCheck" resultType="string">
+		
+		select user_id from public.tbl_user_info where user_id = #{userId}
+	
+	</select>
+
+    <!-- 시스템 접근로그 -->
+    <insert id="insertConnectStat">
+	
+		insert into public.tbl_connect_stat
+		(
+			mnu_cd, user_id, connect_dt, connect_tm, connect_ip
+		)
+		values
+		(
+			#{mnuCd}, #{userId}, to_char(current_date, 'yyyymmdd'), to_char(now(), 'hh24miss'), #{ipAddr}
+		)
+		
+	</insert>
+
+    <!-- 비밀번호 갱신 -->
+    <update id="pwdChange">
+
+		update public.tbl_user_info
+		<if test="userPwd != null and userPwd != ''">
+
+        </if>
+        set user_pwd = fn_encrypt(#{userPwd})
+        ,pwd_chg_dt = to_char(current_date, 'yyyymmdd')
+        ,upt_user = #{userId}
+        ,upt_dt = to_char(current_date, 'yyyymmdd')
+        ,upt_tm = to_char(now(), 'hh24miss')
+        where user_id = #{userId}
+
+    </update>
+
+</mapper>

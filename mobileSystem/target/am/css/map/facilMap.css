@@ -1,0 +1,340 @@
+/* bs 2020.02.25 */
+
+@charset "UTF-8";
+
+
+
+#snb {
+    top: 0px;
+    right: 0;
+    left: 0;
+    z-index: 888;
+    height: 43px;
+    border-bottom: 1px solid #ddd;
+    background: #fff;
+    -webkit-box-shadow: 0 2px 8px 3px rgba(0, 0, 0, 0.1);
+    -moz-box-shadow: 0 2px 8px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px 3px rgba(0, 0, 0, 0.1)
+}
+
+#snb_ps {
+    position: relative;
+}
+
+#mapbarWrap {
+    right: 0;
+    top: 0;
+}
+
+#mapbarWrap #select_box {
+    display: inline-block;
+    position: relative;
+    width: 120px;
+    height: 40px;
+    border-left: 1px solid #d2d2d2;
+    border-radius: 2px;
+}
+
+#mapbarWrap #select_box label {
+    position: absolute;
+    font-size: 13px;
+    color: #222;
+    top: 10px;
+    left: 10px;
+    letter-spacing: 0;
+}
+
+#mapbarWrap #select_box select.mapbar {
+    padding: 0 10px;
+    width: 100%;
+    height: 42px;
+    line-height: 42px;
+}
+
+#select_box02 select.mapbar {
+    width: 116px;
+    height: 42px;
+    line-height: 42px;
+    padding: 0 10px;
+    background: transparent;
+    text-align: center;
+    display: inline-block;
+}
+
+#addr_box1, #addr_box2, #addr_box3 {
+    vertical-align: top;
+}
+
+#addr_box1 {
+    display: inline-block;
+    position: relative;
+    width: 95px;
+    height: 43px;
+    background: url(../images/loca_line.png) 62px -4px no-repeat;
+}
+
+#addr_box1 label {
+    position: absolute;
+    top: 11px;
+    left: 10px;
+    width: 105px;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0;
+    color: #565656;
+    /*  background: url(../images/select_arrow.png) 90% 50% no-repeat;*/
+}
+
+#addr_box1 select.mapbar {
+    padding: 0 10px;
+    width: 100px;
+    height: 43px;
+    line-height: 50px;
+    border: none;
+    opacity: 0;
+}
+
+#addr_box2 {
+    display: inline-block;
+    position: relative;
+    width: 71px;
+    height: 43px;
+    background: url(../images/loca_line.png) 37px -4px no-repeat;
+}
+
+#addr_box2 label {
+    position: absolute;
+    top: 11px;
+    left: 10px;
+    width: 90px;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0;
+    color: #565656;
+    background: url(../images/select_arrow.png) 43% 50% no-repeat;
+}
+
+#addr_box2 select.mapbar {
+    width: 100px;
+    height: 43px;
+    line-height: 43px;
+    padding: 0 10px;
+    border: none;
+    background: transparent;
+    opacity: 0;
+}
+
+#addr_box3 {
+    display: inline-block;
+    position: relative;
+    width: 98px !important;
+    height: 43px;
+}
+
+#addr_box3 label {
+    position: absolute;
+    top: 11px;
+    left: 10px;
+    width: 90px;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0;
+    color: #565656;
+    background: url(../images/select_arrow.png) 90% 50% no-repeat;
+}
+
+#addr_box3 select.mapbar {
+    width: 100px;
+    height: 43px;
+    line-height: 43px;
+    padding: 0 10px;
+    border: none;
+    background: transparent;
+    opacity: 0;
+}
+
+#idx_input {
+    display: inline-block;
+    position: relative;
+    width: 98px;
+    height: 43px;
+}
+
+#idx_input label {
+    position: absolute;
+    top: 11px;
+    left: 10px;
+    width: 90px;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0;
+    color: #565656;
+}
+
+#idx_input > input {
+    position : absolute;
+    left : 80px;
+    width: 100px;
+    height: 43px;
+    line-height: 43px;
+    padding: 0 10px;
+}
+
+#idx_input > a {
+    position : absolute;
+    left : 180px;
+    width: 100px;
+    height: 43px;
+    line-height: 43px;
+    padding: 0 10px;
+}
+
+#location {
+    display: inline-block;
+    position: relative;
+    width: 98px;
+    height: 43px;
+}
+
+#location > a {
+    position : absolute;
+    left : 180px;
+    width: 100px;
+    height: 43px;
+    line-height: 43px;
+    padding: 0 10px;
+}
+
+.h2_map {
+    padding: 0 15px;
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 45px;
+    color: #fff;
+    background: #272f42;
+}
+
+#dataSideBox {
+    overflow: hidden;
+    z-index: 100;
+    position: absolute;
+    top: 320px;
+    left: 25px;
+    bottom: 0px;
+    width: 240px;
+    background: #fff;
+    -webkit-box-shadow: 10px 10px 5px -7px rgba(0, 0, 0, 0.15);
+    -moz-box-shadow: 10px 10px 5px -7px rgba(0, 0, 0, 0.15);
+    box-shadow: 10px 10px 5px -7px rgba(0, 0, 0, 0.15);
+}
+
+.panel_scroll {
+    position: absolute;
+    bottom: 0;
+    top: 415px;
+    width: 240px;
+    overflow-y: auto;
+}
+
+.panel_scroll > li > span,
+.suchi_list > li > span,
+#menu_v > ul > li > span {
+    display: block;
+    margin-top: 100px;
+    padding-top: 80px;
+    width: 100%;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 400;
+    color: #888;
+    background: url('../images/ic_warning.png') 50% 0 no-repeat;
+}
+
+#dataBoard > ul > li {
+    width: 100%;
+}
+
+#dataBoard ul li {
+    display: inline-block;
+    margin-left: 5px;
+
+}
+
+#dataBoard > ul > li:first-child {
+    margin-top: 0px;
+}
+
+.ul li span {
+    padding-left: 10px;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 17px;
+    color: #555;
+    cursor: pointer;
+}
+
+#dataBoard dd {
+    margin-top: 5px
+}
+
+#dataBoard > ul > li > img {
+    vertical-align: sub;
+}
+
+#dataBoard > ul > li > dl {
+    margin-bottom: 0;
+}
+
+#dataBoard > ul > li > dl > dd:nth-child(1) > ul > li > span {
+    margin-left: 5px;
+    font-weight: 500;
+    color: #333;
+    line-height: 16px;
+    vertical-align: top;
+}
+
+#dataBoard > ul > li > dl > dd:nth-child(1) > ul > input {
+    margin: 0 5px;
+    width: 16px;
+    height: 16px;
+    vertical-align: top
+}
+
+#dataBoard .list li {
+    display: inline-block;
+    margin-right: 5px;
+}
+
+#dataBoard .list li span {
+}
+
+#dataBoard > ul > li > dl > dd:nth-child(1) > ul {
+    margin-top: 5px;
+}
+
+.lyrList {
+    padding: 10px;
+}
+
+#pollSlider2-button {
+    position: absolute;
+    width: 20px;
+    height: 69px;
+    left: 265px;
+    top: 660px;
+    cursor: pointer;
+    box-shadow: 2px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/*중첩 레이어*/
+.layer_mapInfo {}
+.layer_mapInfo .layer_inner {width:250px;}
+.mapInfo_list {margin:0; padding:0;list-style:none;}
+.mapInfo_list li {height:30px; padding:0 15px; line-height:30px; font-size:14px; text-align:left;cursor:pointer;}
+.mapInfo_list li:hover {background-color:#ddd;}
+
+.layer_wrap {position:absolute; left:0px; top:0px; z-index:9999;}
+.layer_wrap:after {content:""; display:inline-block; height:100%; vertical-align:middle;}
+
+.layer_wrap .layer_inner {display:inline-block; position:relative; background-color:#fff; vertical-align:middle; text-align:center;}
+.layer_wrap .layer_inner .layer_header h3 {display:block; height:50px; margin: 0; padding:0 15px; font-family:"NotoSansKR-Medium"; color:#fff; font-size:16px; background-color:#2a9dc9; line-height:52px; text-align:left;}

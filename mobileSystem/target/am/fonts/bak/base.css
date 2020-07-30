@@ -1,0 +1,96 @@
+@charset "utf-8";
+
+/*------------------------------------------------------------------------------------------------------------------------------------------
+	File : base.css
+	Author : Jong-hun Park 2016-09
+	CSS 적용순서 : 아이디 > 태그와 클래스 > 클래스 > 태그
+	CSS 선택자 선언순서 : Type Selector, Layout Selector, Class Selector, Etc
+	CSS 속성 선언순서 : display, position, float/clear, overflow, width/height, margin/padding, border, background, color/font, align, etc 
+--------------------------------------------------------------------------------------------------------------------------------------------*/
+
+*, *:before, *:after {
+	margin:0px; 
+	padding:0px;
+  	-webkit-box-sizing: inherit;
+  	-moz-box-sizing: inherit;
+  	box-sizing: inherit;
+	/*font-family:"NanumGothic", "Dotum", "Dotumche", "돋움", "돋움", "돋움체", "Arial", "sans-serif";*/
+	font-family:'NotoSansKR-Regular';
+}
+
+html {
+	height:100%;
+  	-webkit-box-sizing: border-box;
+  	-moz-box-sizing: border-box;
+  	box-sizing: border-box;
+}
+body {	 
+	scrollbar-3dlight-color:#b4b4b4;
+	scrollbar-arrow-color:#333333;
+	scrollbar-base-color:#eeeeee;
+	scrollbar-darkshadow-color:#efefef;
+	scrollbar-face-color:#efefef;
+	scrollbar-highlight-color:#ffffff;
+	scrollbar-shadow-color:#b4b4b4;
+	height:100%;
+	font-size:100%;
+	/*font:inherit;*/
+	line-height:1;
+	vertical-align:baseline;
+	font-family:'NotoSansKR-Regular';
+	color:#555555;
+	-webkit-font-smoothing:antialiased;
+	-webkit-text-size-adjust:none;
+}
+html.no_scroll {overflow-y:hidden}
+body.no_scroll {overflow-y:hidden;}
+
+address, article, aside, canvas, details, figure, figcaption, footer, header, hgroup, menu, nav, section {display:block\9; margin:0\9; padding:0\9;}
+hr, caption {display:none;}
+h1, h2, h3, h4, h5, h6 ,h7 {font-weight:normal;}
+img {border:none; vertical-align:middle;}
+ol, ul, li, dl, dt, dd {list-style:none;}
+table {width:100%; border:0px; border-spacing:0px; border-collapse:collapse;}
+th {font-weight:normal; color:#333; box-sizing:border-box; -moz-box-sizing:border-box; -webkit-box-sizing:border-box;}
+th, td {border:0px; word-break:break-all; box-sizing:border-box; -moz-box-sizing:border-box; -webkit-box-sizing:border-box;}
+fieldset {width:100%; border:0px;}
+legend {display:none;}
+caption {}
+frameset {border:0px;}
+iframe {width:100%; border:0px;}
+em, address {font-style:normal;}
+button, a, select, input, label {vertical-align:middle;}
+label {display:inline-block; *display:inline; *zoom:1; cursor:pointer}
+
+a {/*font-size:0.813em;*/ color:#555555; text-decoration:none;}
+a:active, visited, link {color:#111111;  border:0px;}
+a:hover {color:#333333;}
+
+i {font-style:normal;}
+
+/* Font */
+@font-face {
+  font-family:'NotoSansKR-Regular';
+  font-style: normal;
+  font-weight: 400;
+  src: url('./../../common/fonts/NotoSansKR-Regular.eot'); /* IE9 Compat Modes */
+  src: local('./../../common/fonts/Noto Sans CJK KR'),
+       local('./../../common/fonts/NotoSansCJKkr-Regular'),
+     url('./../../common/fonts/NotoSansKR-Regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('./../../common/fonts/NotoSansKR-Regular.woff2') format('woff2'), /* Super Modern Browsers */
+       url('./../../common/fonts/NotoSansKR-Regular.woff') format('woff'), /* Pretty Modern Browsers */
+       url('./../../common/fonts/NotoSansKR-Regular.ttf') format('truetype'); /* Safari, Android, iOS */
+}
+
+@font-face {
+  font-family:'NotoSansKR-Medium';
+  font-style: normal;
+  font-weight: 500;
+  src: url('./../../common/fonts/NotoSansKR-Medium.eot'); /* IE9 Compat Modes */
+  src: local('./../../common/fonts/Noto Sans CJK KR'),
+       local('./../../common/fonts/NotoSansCJKkr-Medium'),
+     url('./../../common/fonts/NotoSansKR-Medium.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('./../../common/fonts/NotoSansKR-Medium.woff2') format('woff2'), /* Super Modern Browsers */
+       url('./../../common/fonts/NotoSansKR-Medium.woff') format('woff'), /* Pretty Modern Browsers */
+       url('./../../common/fonts/NotoSansKR-Medium.ttf') format('truetype'); /* Safari, Android, iOS */
+}

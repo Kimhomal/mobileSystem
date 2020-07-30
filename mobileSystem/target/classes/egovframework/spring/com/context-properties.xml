@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:util="http://www.springframework.org/schema/util"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.1.xsd">
+
+	<!-- 프로퍼티 정보 설정 -->
+	<bean name="propertiesService" class="egovframework.rte.fdl.property.impl.EgovPropertyServiceImpl" destroy-method="destroy">
+		<property name="properties">
+			<map>
+				<entry key="pageUnit" value="10" />
+				<entry key="pageSize" value="10" />
+				<entry key="posblAtchFileSize" value="5242880" />
+				<entry key="Globals.fileStorePath" value="/user/file/sht/" />
+				<entry key="Globals.addedOptions" value="false" />
+			</map>
+		</property>
+
+		<property name="extFileName">
+			<set>
+				<map>
+					<entry key="encoding" value="UTF-8"/>
+					<entry key="filename" value="classpath*:egovframework/egovProps/*.properties"/>
+				</map>
+			</set>
+		</property>
+	</bean>
+
+	<beans profile="local">
+		<util:properties id="sysProps">
+			<!-- geoserver url -->
+			<!--<prop key="geoserver.url">http://211.220.207.53:8180/geoserver</prop>-->
+			<prop key="geoserver.url">http://1.234.21.200:8062/geoserver</prop>
+			<!-- base map url -->
+			<prop key="base.map.url">http://localhost:8080</prop>
+			<!-- jpg/tiff url -->
+			<prop key="aero.data.img">http://localhost:8080:9020</prop>
+			<!-- 			<prop key="aero.data.img">http://sncinfo.iptime.org:9001</prop> -->
+			<!-- jpg url for TEST 9 Images fraction-->
+			<prop key="aero.data.imgTest">http://sncinfo.iptime.org:9001/jpg</prop>
+			<!-- tiling -->
+			<prop key="aero.data.tiles">http://sncinfo.iptime.org:9001/tiles</prop>
+			<!-- 도로명주소 연계 KEY -->
+			<prop key="juso.conn.key">U01TX0FVVEgyMDE4MDgxNDE3NDg0NjEwODA3NzE=</prop>
+			<!-- 수치지형도 다운로드 prefix dir -->
+			<prop key="digital.map.prefix.dir">D:/digitalmap</prop>
+			<!-- 수치지형도 엑셀 템플릿파일 위치 -->
+			<prop key="digital.map.template.dir">D:/digitalmap/template</prop>
+			<!-- jpg 원본파일 디렉토리 -->
+			<prop key="aero.src.jpg.dir">D:/APIS_DB/jpg</prop>
+			<!-- tif 원본파일 디렉토리 -->
+			<prop key="aero.src.tif.dir">D:/APIS_DB/pyramid</prop>
+			<!-- tif/jpg 압축파일 dir-->
+			<prop key="aero.archive.dir">D:/APIS_DB/tempCompress</prop>
+			<!--회전된 jpg/tif 경로-->
+			<prop key="aero.dest.dir">D:/APIS_DB/temp</prop>
+			<!-- tif/jpg 압축파일 URL-->
+			<prop key="aero.archive.url">D:/APIS_DB/tempCompress</prop>
+			<!-- 테스트용 response xml 위치 -->
+			<prop key="xml.response.dir">D:/responseFiles/xml/</prop>
+			<!-- 연계 시스템 ID -->
+			<prop key="conn.sys.id">3XSV-R410-MUE8-4A4U</prop>
+			<!--ImageRotation.exe path-->
+			<prop key="rotate.program.path">C:/Users/Administrator/Desktop/busan/ImageRotation/ImageRotation_git.exe</prop>
+		</util:properties>
+	</beans>
+	<beans profile="dev">
+		<util:properties id="sysProps">
+			<!-- geoserver url -->
+			<prop key="geoserver.url">http://1.234.21.200:8062/geoserver</prop>
+			<!-- base map url -->
+			<prop key="base.map.url">http://localhost:9020</prop>
+			<!-- jpg/tiff url -->
+			<prop key="aero.data.img">http://localhost:9001</prop><!-- 아파치에서 -->
+			<!-- jpg url for TEST 9 Images fraction-->
+			<prop key="aero.data.imgTest">http://localhost:9001/jpg</prop>
+			<!-- tiling -->
+			<prop key="aero.data.tiles">http://sncinfo.iptime.org:9001/tiles</prop>
+			<!-- 도로명주소 연계 KEY -->
+			<prop key="juso.conn.key">U01TX0FVVEgyMDE4MDgxNDE3NDg0NzEwODA3NzI=</prop>
+			<!-- 수치지형도 다운로드 prefix dir -->
+			<prop key="digital.map.prefix.dir">D:/digitalmap</prop>
+			<!-- 수치지형도 엑셀 템플릿파일 위치 -->
+			<prop key="digital.map.template.dir">D:/digitalmap/template</prop>
+			<!-- jpg 원본파일 디렉토리 -->
+			<!--<prop key="aero.src.jpg.dir">E:/APIS_DB/jpg</prop>-->
+			<prop key="aero.src.jpg.dir">F:/aeroData/jpg</prop>
+			<!-- tif 원본파일 디렉토리 -->
+			<prop key="aero.src.tif.dir">F:/aeroData/pyramid</prop>
+			<!-- tif/jpg 압축파일 dir-->
+			<prop key="aero.archive.dir">F:/aeroData/tempCompress</prop>
+			<!--회전된 jpg/tif 경로-->
+			<prop key="aero.dest.dir">F:/aeroData/temp</prop>
+			<!-- tif/jpg 압축파일 URL-->
+			<prop key="aero.archive.url">http://192.168.0.37:9001/tempCompress</prop>
+			<!--<prop key="aero.archive.url">E:/APIS_DB/tempCompress</prop>-->
+			<!-- 테스트용 response xml 위치 -->
+			<prop key="xml.response.dir">D:/responseFiles/xml/</prop>
+			<!-- 연계 시스템 ID -->
+			<prop key="conn.sys.id">3XSV-R410-MUE8-4A4U</prop>
+			<!--ImageRotation.exe path-->
+			<prop key="rotate.program.path">F:/ImageRotation/ImageRotation_git.exe</prop>
+		</util:properties>
+	</beans>
+
+	<beans profile="prd">
+		<util:properties id="sysProps">
+			<!-- geoserver url -->
+			<prop key="geoserver.url">http://99.1.5.36:9092/geoserver</prop>
+			<!-- base map url -->
+			<prop key="base.map.url">http://localhost:9020</prop>
+			<!-- jpg/tiff url -->
+			<prop key="aero.data.img">http://99.1.5.36:9093</prop>
+			<!-- jpg url for TEST 9 Images fraction-->
+			<prop key="aero.data.imgTest">http://99.1.5.36:9093/jpg</prop>
+			<!-- tiling -->
+			<prop key="aero.data.tiles">file:///E:/aeroData/tiles</prop>
+			<!-- 도로명주소 연계 KEY -->
+			<prop key="juso.conn.key">U01TX0FVVEgyMDE4MTExNjE2MTQyOTEwODMwNDQ=</prop>
+			<!-- 수치지형도 다운로드 prefix dir -->
+			<prop key="digital.map.prefix.dir">E:/digitalmap</prop>
+			<!-- 수치지형도 엑셀 템플릿파일 위치 -->
+			<prop key="digital.map.template.dir">E:/digitalmap/template</prop>
+			<!-- jpg 원본파일 디렉토리 -->
+			<prop key="aero.src.jpg.dir">E:/APIS_DB/jpg</prop>
+			<!-- tif 원본파일 디렉토리 -->
+			<prop key="aero.src.tif.dir">E:/APIS_DB/prymid</prop>
+			<!-- tif/jpg 압축파일 dir-->
+			<prop key="aero.archive.dir">E:/APIS_DB/tempCompress</prop>
+			<!--회전된 jpg/tif 경로-->
+			<prop key="aero.dest.dir">E:/APIS_DB/temp</prop>
+			<!-- tif/jpg 압축파일 URL-->
+			<prop key="aero.archive.url">http://99.1.5.36:9093/tempCompress</prop>
+			<!-- 연계 시스템 ID -->
+			<prop key="conn.sys.id">3XSV-R410-MUE8-4A4U</prop>
+			<!--ImageRotation.exe path-->
+			<prop key="rotate.program.path">E:/APIS_DB/ImageRotation/ImageRotation_git.exe</prop>
+		</util:properties>
+	</beans>
+
+</beans>

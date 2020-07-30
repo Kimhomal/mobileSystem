@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="am.common.util.code.service.CommonCodeMapper">
+
+	<!-- 공통코드 -->
+<!-- 	<select id="getCommonCode" parameterType="map" resultType="map"> -->
+<!-- 	<![CDATA[ -->
+<!-- 		SELECT CD_VAL   AS VALUE, -->
+<!-- 		            CD_NAM  AS NAME -->
+<!-- 		FROM   PUBLIC.SYS_CD_MNG -->
+<!-- 		WHERE  ENG_NAM = #{codeId} -->
+<!-- 	]]> -->
+<!-- 	<if test='refCd != null and refCd != ""'> -->
+<!-- 		<![CDATA[ AND REF_CD = #{refCd} ]]> -->
+<!-- 	</if> -->
+<!-- 	<![CDATA[ -->
+<!-- 		ORDER  BY CD_VAL -->
+<!-- 	]]> -->
+<!-- 	</select> -->
+	<select id="getCommonCode" parameterType="map" resultType="map">
+	<![CDATA[
+		SELECT STD_CODE   AS VALUE,
+		       STD_NM  AS NAME
+		FROM   PUBLIC.tbl_std_code
+		WHERE  std_grp = #{codeId}
+		AND 	USE_FLAG = 'Y'
+		ORDER  BY STD_CODE
+	]]>
+	</select>
+
+	<!-- 권한 코드 -->
+	<select id="getAuthCode" parameterType="map" resultType="map">
+	<![CDATA[
+		SELECT * FROM (
+			SELECT ROLE_ID AS VALUE
+				   ,ROLE_NAM AS NAME
+			  FROM TGIS.SYS_ROLE_MNG
+			 WHERE ROLE_ID LIKE 'R%'
+			 ORDER BY ROLE_ID
+		) A ORDER BY VALUE
+	]]>
+	</select>
+
+	<!-- 선택한 시에 따른 구군명(법정동) -->
+	<select id="getSggB" parameterType="map" resultType="map">
+	<![CDATA[
+		SELECT SUBSTR(cast(sig_cd as char(20)), 1, 5) AS VALUE,
+		       sig_kor_nm AS NAME
+		FROM   PUBLIC.gj_sgg;
+	]]>
+	</select>
+
+	<!-- 선택한 구군명에 따른 읍면동(법정동) -->
+	<select id="getEmdB" parameterType="map" resultType="map">
+	<![CDATA[
+	SELECT *
+		FROM   (SELECT SUBSTR(cast(emd_cd as char(20)), 6, 3) AS VALUE,
+		              emd_kor_nm as NAME
+		        FROM   tl_scco_emd
+		        WHERE  emd_kor_nm IS NOT NULL
+		               AND SUBSTR(cast(emd_cd as char(20)), 1, 5) = #{sggCode} 
+		        GROUP  BY SUBSTR(cast(emd_cd as char(20)), 6, 3),
+		                  NAME)TEMP
+		ORDER  BY NAME
+	]]>
+	</select>
+
+	<!-- [판독 리트스 엑셀다운로드] -->
+	<select id="getExcel" parameterType="map" resultType="egovMap">
+		<![CDATA[
+		SELECT NUM
+				,ITPT_ID
+				,TO_DATE(SUBSTR(ITPT_DT,1,8), 'YYYYMMDD')
+				,ITPT_STATE_CD
+				,ITPT_TYPE_CD
+				,CONCAT(ITPT_SGG_NM || ' ', ITPT_EMD_NM || ' ', ITPT_RI_NM || ' ', ITPT_JIBUN || ' ') AS ITPT_ADDRESS 
+				,ITPT_PERSON
+         		,TO_CODE('TBL_INTERPRETATION', 'GB', ITPT_RESULT_GB) AS ITPT_GB_CD
+          		,TO_CODE('TBL_INTERPRETATION', 'BF', ITPT_RESULT_BF) AS ITPT_BF_CD
+          		,ITPT_OPINION
+		FROM   (SELECT ( ROW_NUMBER() OVER() ) AS NUM,
+		               TEMP.* 
+							,TO_CODE('TBL_INTERPRETATION', 'STATE', ITPT_STATE) AS ITPT_STATE_CD
+			         		,TO_CODE('TBL_INTERPRETATION', 'TYPE', ITPT_TYPE) AS ITPT_TYPE_CD
+		        FROM   (SELECT *
+		                FROM   PUBLIC.TBL_INTERPRETATION
+		]]>
+		<where>
+			<if test='checkList != null'>
+				<foreach collection="checkList" item="checkList" open="(" close=")" separator="OR">
+					ITPT_TYPE = #{checkList.type} AND ITPT_RESULT_GB = #{checkList.searchGb}
+	        	</foreach>
+			</if>
+           	<if test ='searchBf != "" and searchBf != null'>
+            <![CDATA[ AND ITPT_RESULT_BF = #{searchBf} ]]>
+           	</if>
+			<if test='nSggB != "" and nSggB != null'>
+			<![CDATA[ AND SUBSTR(ITPT_PNU, 1, 5) = #{nSggB} ]]>
+			</if>
+			<if test='nEmdB != "" and nEmdB != null'>
+			<![CDATA[ AND SUBSTR(ITPT_PNU, 6, 3) = #{nEmdB} ]]>
+			</if>
+			<if test='nRiB != "" and nRiB != null'>
+			<![CDATA[ AND SUBSTR(ITPT_PNU, 9, 2) = #{nRiB} ]]>
+			</if>
+			<if test='searchState != "" and searchState != null'>
+			<![CDATA[ AND ITPT_STATE = #{searchState} ]]>
+			</if>
+			<if test='searchStateN != "" and searchStateN != null'>
+			<![CDATA[ AND ITPT_STATE != #{searchStateN} ]]>
+			</if>
+			<if test='searchStateN2 != "" and searchStateN2 != null'>
+			<![CDATA[ AND ITPT_STATE != #{searchStateN2} ]]>
+			</if>
+			<if test='sanHidden == "2"'>
+			<![CDATA[ AND SUBSTR(ITPT_PNU, 11, 1) = '2' ]]> 
+			</if>
+			<if test='sanHidden == "1"'>
+			<![CDATA[ AND SUBSTR(ITPT_PNU, 11, 1) = '1' ]]>
+			</if>
+			<if test='searchCtt != "" and searchCtt != null'>
+			<![CDATA[ AND SUBSTR(ITPT_PNU, 12, 4) = SUBSTR('0000'||#{searchCtt},char_length('0000'||#{searchCtt})-3) ]]>
+			</if>
+			<if test='searchCtt2 != "" and searchCtt2 != null'>
+			<![CDATA[ AND SUBSTR(ITPT_PNU, 16, 4) = SUBSTR('0000'||#{searchCtt2},char_length('0000'||#{searchCtt2})-3) ]]>
+			</if>
+			<if test='nDateStd != "" and nDateStd != null'>
+			<![CDATA[ AND TO_DATE(SUBSTR(ITPT_DT,1,8), 'YYYYMMDD') >= TO_DATE(#{nDateStd}, 'YYYY-MM-DD') ]]>
+			</if>
+			<if test='nDateEnd != "" and nDateEnd != null'>
+			<![CDATA[ AND TO_DATE(SUBSTR(ITPT_DT,1,8), 'YYYYMMDD') <= TO_DATE(#{nDateEnd}, 'YYYY-MM-DD') ]]>
+			</if>
+			<if test='userOrgan != "" and userOrgan != null'>
+			<![CDATA[
+				AND SUBSTRING(ITPT_ID,1,5) = (SELECT SUBSTRING(SGG_CD,1,5) FROM GJ_SGG WHERE SGG_NM = (SELECT TO_CODE('ORGAN', #{userOrgan}) AS SGG_NM FROM  public.tbl_user_info LIMIT 1))
+			]]>
+			</if>
+			<![CDATA[ AND ITPT_TYPE != '0000' ]]>
+		</where>
+	<![CDATA[
+            ORDER BY ITPT_ID ASC
+            ) TEMP)TEMP 
+	]]>
+	</select>
+	
+</mapper>

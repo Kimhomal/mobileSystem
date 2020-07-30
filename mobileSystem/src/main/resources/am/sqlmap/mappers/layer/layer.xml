@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="am.layer.service.LayerMapper">
+	<!-- 레이어 정보 가져오기 -->
+    <select id="getLayerList" parameterType="map" resultType="egovMap">
+	<![CDATA[
+		SELECT *
+		FROM PUBLIC.LAYER_INFO
+    ]]>
+	</select>
+	
+	<select id="getHcsList" parameterType="map" resultType="hashMap">
+	<![CDATA[
+		SELECT ST_DISTANCE(GEOM, #{pointGeom}) AS x, FTR_CDE, FTR_IDN, PIP_DIP AS y, low_dep AS l, hgh_dep AS h, 'WTL' AS type, 'WTL_PIPE_LM' AS name, ST_DISTANCE(GEOM, #{lastGeom}) AS lx, PIP_LBL
+		FROM   WTL_PIPE_LM 
+		WHERE  ST_INTERSECTS(GEOM, #{geom})
+		
+		UNION ALL
+		
+		SELECT ST_DISTANCE(GEOM, #{pointGeom}) AS x, FTR_CDE, FTR_IDN, PIP_DIP AS y, beg_dep AS l, end_dep AS h,'SWL' AS type, 'SWL_PIPE_LM' AS name, ST_DISTANCE(GEOM, #{lastGeom}) AS lx, PIP_LBL
+		FROM   SWL_PIPE_LM
+		WHERE  ST_INTERSECTS(GEOM, #{geom})
+	ORDER BY x
+		
+	]]>
+	</select>
+	
+	<select id="getRoadHcsList" parameterType="map" resultType="egovMap">
+	<![CDATA[
+
+		SELECT ST_DISTANCE(GEOM, #{pointGeom}) AS x, FTR_CDE, RDL_WID, 'RDL' AS type, 'RDL_RBLN_LS' AS name
+		FROM   RDL_CTLR_LS
+		WHERE  ST_INTERSECTS(GEOM, #{geom})
+		order by x
+	]]>
+	</select>
+	
+	<!-- [이미지 업로드] -->
+    <insert id="uploadImage" parameterType="map">
+	<![CDATA[
+		INSERT INTO PUBLIC.TBL_FILE_MNG (
+			FILE_NM,
+			FILE_PATH,
+			USER_ID,
+			REG_YMD,
+			UPT_YMD,
+			GEOM,
+			FILE_TITLE,
+			FILE_DESC,
+			SV_FILE_NM)
+		VALUES (
+			#{fileNm},
+			#{filePath},
+			#{userId},
+			now(),
+			now(),
+			st_geomfromtext(#{geom}),
+			#{fileTitle},
+			#{fileDesc},
+			#{svFileNm} )
+	]]>
+	</insert>
+	
+	<!-- 이미지 정보 가져오기 -->
+    <select id="getImages" parameterType="map" resultType="egovMap">
+	<![CDATA[
+		SELECT *, st_astext(GEOM) AS geometry
+		FROM PUBLIC.TBL_FILE_MNG
+    ]]>
+	</select>
+	
+	<!-- 객체 정보 가져오기 -->
+    <select id="getFeatureInfo" parameterType="map" resultType="hashMap">
+	<![CDATA[
+		SELECT *
+		FROM ${layerNm}
+		WHERE GID = ${id}
+    ]]>
+	</select>
+</mapper>

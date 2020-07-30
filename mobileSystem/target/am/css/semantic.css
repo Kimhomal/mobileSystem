@@ -1,0 +1,302 @@
+/* table semantic style start */
+.semantic.table {
+	width: 100%;
+	background: #fff;
+	margin: 1em 0;
+	border: 1px solid rgba(34,36,38,.15);
+	-webkit-box-shadow: none;
+	box-shadow: none;
+	border-radius: .28571429rem;
+	text-align: left;
+	color: rgba(0,0,0,.87);
+	border-collapse: separate;
+	border-spacing: 0;
+}
+
+.semantic.table thead tr:first-child>th:only-child {
+	border-radius: .28571429rem .28571429rem 0 0;
+}
+
+.semantic.table thead tr:first-child>th:last-child {
+	border-radius: 0 .28571429rem 0 0;
+}
+
+.semantic.table thead th {
+	cursor: auto;
+	background: #f9fafb;
+	text-align: inherit;
+	color: rgba(0,0,0,.87);
+	padding: .92857143em .78571429em;
+	vertical-align: inherit;
+	font-style: none;
+	font-weight: 700;
+	text-transform: none;
+	border-bottom: 1px solid rgba(34,36,38,.1);
+	border-left: none;
+}
+
+.semantic.table td, .ui.semantic th {
+	-webkit-transition: background .1s ease,color .1s ease;
+	transition: background .1s ease,color .1s ease;
+}
+
+/* .semantic.table tr.disable-tr {
+	-webkit-transition: display .1s ease,color .1s ease;
+	transition: display .1s ease,color .1s ease;
+} */
+
+.semantic.table tr td:first-child:not(.thead), .semantic.table tr th:first-child {
+	border-left: none;
+}
+
+.semantic.table tr td, .ui.table tr th {
+	border-left: 1px solid rgba(34,36,38,.1);
+}
+
+.semantic.table td.collapsing, .ui.semantic th.collapsing {
+	width: 1px;
+	white-space: nowrap;
+}
+
+.semantic.table tr:first-child td {
+	border-top: none;
+}
+
+.semantic.table td {
+	padding: .78571429em .78571429em;
+	text-align: inherit;
+}
+
+.semantic.table tr td.definition, .semantic.table tr td:first-child:not(.ignored) {
+	background: rgba(0,0,0,.03);
+	color: rgba(0,0,0,.95);
+}
+
+.semantic.table tr td.thead {
+	background: rgba(0,0,0,.03);
+	color: rgba(0,0,0,.95);
+}
+/* table semantic style end */
+
+/* button semantic style start */
+.semantic.three.buttons {
+	width: 100%;
+}
+
+.semantic.five.buttons {
+    width: 100%;
+}
+
+.semantic.buttons {
+	display: -webkit-inline-box;
+	display: -ms-inline-flexbox;
+	display: inline-flex;
+	-webkit-box-orient: horizontal;
+	-webkit-box-direction: normal;
+	-ms-flex-direction: row;
+	flex-direction: row;
+	font-size: 0;
+	vertical-align: baseline;
+	margin: 0 .25em 0 0;
+}
+
+.semantic.buttons:not(.basic):not(.inverted)>.button, .semantic.buttons>.semantic.button:not(.basic):not(.inverted) {
+	-webkit-box-shadow: 0 0 0 1px transparent inset, 0 0 0 0 rgba(34,36,38,.15) inset;
+	box-shadow: 0 0 0 1px transparent inset, 0 0 0 0 rgba(34,36,38,.15) inset;
+}
+
+.semantic.buttons .button:first-child {
+	border-left: none;
+	margin-left: 0;
+	border-top-left-radius: .28571429rem;
+	border-bottom-left-radius: .28571429rem;
+}
+
+.semantic.three.buttons>.button {
+	width: 33.333%;
+}
+
+.semantic.five.buttons>.button {
+    width: 20%;
+}
+
+.semantic.buttons .button:last-child {
+	border-top-right-radius: .28571429rem;
+	border-bottom-right-radius: .28571429rem;
+}
+
+.semantic.buttons .button {
+	-webkit-box-flex: 1;
+	-ms-flex: 1 0 auto;
+	flex: 1 0 auto;
+	margin: 0;
+	border-radius: 0;
+	margin: 0;
+}
+
+.semantic.button:hover {
+	background-color: #cacbcd;
+	background-image: none;
+	-webkit-box-shadow: 0 0 0 1px transparent inset, 0 0 0 0 rgba(34,36,38,.15) inset;
+	box-shadow: 0 0 0 1px transparent inset, 0 0 0 0 rgba(34,36,38,.15) inset;
+	color: rgba(0,0,0,.8);
+}
+
+.semantic.active.button:hover {
+	background-color: #c0c1c2;
+	background-image: none;
+	color: rgba(0,0,0,.95);
+}
+
+.semantic.active.button {
+	background-color: #c0c1c2;
+	background-image: none;
+	-webkit-box-shadow: 0 0 0 1px transparent inset;
+	box-shadow: 0 0 0 1px transparent inset;
+	color: rgba(0,0,0,.95);
+}
+
+.semantic.button {
+	cursor: pointer;
+	display: inline-block;
+	min-height: 1em;
+	outline: 0;
+	border: none;
+	vertical-align: baseline;
+	background: #e0e1e2 none;
+	color: rgba(0,0,0,.6);
+	margin: 0 .25em 0 0;
+	padding: .78571429em 0.5em .78571429em;
+	text-transform: none;
+	text-shadow: none;
+	font-weight: 700;
+	font-size: 0.9rem;
+	line-height: 1em;
+	font-style: normal;
+	text-align: center;
+	text-decoration: none;
+	border-radius: .28571429rem;
+	-webkit-box-shadow: 0 0 0 1px transparent inset, 0 0 0 0 rgba(34,36,38,.15) inset;
+	box-shadow: 0 0 0 1px transparent inset, 0 0 0 0 rgba(34,36,38,.15) inset;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	-webkit-transition: opacity .1s ease,background-color .1s ease,color .1s ease,background .1s ease,-webkit-box-shadow .1s ease;
+	transition: opacity .1s ease,background-color .1s ease,color .1s ease,background .1s ease,-webkit-box-shadow .1s ease;
+	transition: opacity .1s ease,background-color .1s ease,color .1s ease,box-shadow .1s ease,background .1s ease;
+	transition: opacity .1s ease,background-color .1s ease,color .1s ease,box-shadow .1s ease,background .1s ease,-webkit-box-shadow .1s ease;
+	will-change: '';
+	-webkit-tap-highlight-color: transparent;
+}
+
+.semantic.steps {
+    display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-box-align: stretch;
+    -ms-flex-align: stretch;
+    align-items: stretch;
+    /* margin: 1em 0; */
+    background: '';
+    width: 100%;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    line-height: 1.14285714em;
+    /* border-radius: .28571429rem;
+    border: 1px solid rgba(34,36,38,.15); */
+}
+
+.semantic.steps .step {
+    position: relative;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-flex: 1;
+    -ms-flex: 1 0 auto;
+    flex: 1 0 auto;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    vertical-align: middle;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    margin: 0 0;
+    padding: 0 0;
+    background: #fff;
+    color: rgba(0,0,0,.87);
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    border-radius: 0;
+    border: none;
+    /* border-right: 1px solid rgba(34,36,38,.15); */
+    -webkit-transition: background-color .1s ease,opacity .1s ease,color .1s ease,-webkit-box-shadow .1s ease;
+    transition: background-color .1s ease,opacity .1s ease,color .1s ease,-webkit-box-shadow .1s ease;
+    transition: background-color .1s ease,opacity .1s ease,color .1s ease,box-shadow .1s ease;
+    transition: background-color .1s ease,opacity .1s ease,color .1s ease,box-shadow .1s ease,-webkit-box-shadow .1s ease;
+}
+
+.semantic.steps .step>.icon, .semantic.steps .step>.icon~.content {
+    display: block;
+    -webkit-box-flex: 0;
+    -ms-flex: 0 1 auto;
+    flex: 0 1 auto;
+    -ms-flex-item-align: middle;
+    align-self: middle;
+}
+
+.semantic.absolute {
+	position: absolute;
+	z-index: 1;
+}
+
+.semantic.steps .step:after {
+    display: none;
+    position: absolute;
+    z-index: 2;
+    content: '';
+    top: 50%;
+    right: 0;
+    border: medium none;
+    background-color: #fff;
+    width: 1.14285714em;
+    height: 1.14285714em;
+    border-style: solid;
+    border-color: rgba(34,36,38,.15);
+    border-width: 0 1px 1px 0;
+    -webkit-transition: background-color .1s ease,opacity .1s ease,color .1s ease,-webkit-box-shadow .1s ease;
+    transition: background-color .1s ease,opacity .1s ease,color .1s ease,-webkit-box-shadow .1s ease;
+    transition: background-color .1s ease,opacity .1s ease,color .1s ease,box-shadow .1s ease;
+    transition: background-color .1s ease,opacity .1s ease,color .1s ease,box-shadow .1s ease,-webkit-box-shadow .1s ease;
+    -webkit-transform: translateY(-50%) translateX(50%) rotate(-45deg);
+    transform: translateY(-50%) translateX(50%) rotate(-45deg);
+}
+
+.semantic.steps .step:after {
+    display: block
+}
+
+.semantic.steps .active.step:after {
+    display: block
+}
+
+.semantic.steps .step:last-child:after {
+    display: none
+}
+
+.semantic.steps .active.step:last-child:after {
+    display: none
+}
+
+/* button semantic style end */

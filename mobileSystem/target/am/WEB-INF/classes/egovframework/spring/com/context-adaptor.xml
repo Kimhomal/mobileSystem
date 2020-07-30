@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+
+	<bean id="xmlUtils" class="am.common.adaptor.XmlUtils" />
+
+	<beans profile="local">
+		<bean id="addrApiAdaptor" class="am.common.adaptor.WebServiceConnectionAdaptor">
+			<property name="hostName" value="http://www.juso.go.kr/addrlink/addrLinkApi.do?confmKey=#{sysProps['juso.conn.key']}" />
+			<property name="requestMethod" value="post" />
+			<property name="soapAction" value="" />
+			<property name="contentType" value="application/x-www-form-urlencoded;charset=utf-8" />
+			<property name="encoding" value="utf-8" />
+			<property name="connectionTimeOut" value="60000" />
+			<property name="readTimeOut" value="60000" />
+		</bean>
+		
+		<bean id="httpUrlAdaptor" class="am.common.adaptor.WebServiceConnectionAdaptor">
+			<property name="hostName" value="http://10.175.82.244/conn/estateGateway" />
+			<property name="requestMethod" value="post" />
+			<property name="soapAction" value="" />
+			<property name="contentType" value="application/x-www-form-urlencoded;charset=utf-8" />
+			<property name="encoding" value="utf-8" />
+			<property name="connectionTimeOut" value="60000" />
+			<property name="readTimeOut" value="60000" />
+		</bean>
+	</beans>
+	<beans profile="dev">
+		<bean id="addrApiAdaptor" class="am.common.adaptor.WebServiceConnectionAdaptor">
+			<property name="hostName" value="http://www.juso.go.kr/addrlink/addrLinkApi.do?confmKey=#{sysProps['juso.conn.key']}" />
+			<property name="requestMethod" value="post" />
+			<property name="soapAction" value="" />
+			<property name="contentType" value="application/x-www-form-urlencoded;charset=utf-8" />
+			<property name="encoding" value="utf-8" />
+			<property name="connectionTimeOut" value="60000" />
+			<property name="readTimeOut" value="60000" />
+		</bean>
+		
+		<bean id="httpUrlAdaptor" class="am.common.adaptor.WebServiceConnectionAdaptor">
+			<property name="hostName" value="http://10.175.82.244/conn/estateGateway" />
+			<property name="requestMethod" value="post" />
+			<property name="soapAction" value="" />
+			<property name="contentType" value="application/x-www-form-urlencoded;charset=utf-8" />
+			<property name="encoding" value="utf-8" />
+			<property name="connectionTimeOut" value="60000" />
+			<property name="readTimeOut" value="60000" />
+		</bean>
+	</beans>
+	<beans profile="prd">
+		<bean id="addrApiAdaptor" class="am.common.adaptor.WebServiceConnectionAdaptor">
+			<property name="hostName" value="http://10.182.60.20/addrlink/addrLinkApi.do?confmKey=#{sysProps['juso.conn.key']}" />
+			<property name="requestMethod" value="post" />
+			<property name="soapAction" value="" />
+			<property name="contentType" value="application/x-www-form-urlencoded;charset=utf-8" />
+			<property name="encoding" value="utf-8" />
+			<property name="connectionTimeOut" value="60000" />
+			<property name="readTimeOut" value="60000" />
+		</bean>
+		
+		<bean id="httpUrlAdaptor" class="am.common.adaptor.WebServiceConnectionAdaptor">
+			<property name="hostName" value="http://10.175.82.244/conn/estateGateway" />
+			<property name="requestMethod" value="post" />
+			<property name="soapAction" value="" />
+			<property name="contentType" value="application/x-www-form-urlencoded;charset=utf-8" />
+			<property name="encoding" value="utf-8" />
+			<property name="connectionTimeOut" value="60000" />
+			<property name="readTimeOut" value="60000" />
+		</bean>
+	</beans>
+</beans>

@@ -1,0 +1,16 @@
+@charset "utf-8";
+
+/*------------------------------------------------------------------------------------------------------------------------------------------
+	File : lte_ie9.css 
+	Author : Jong-hun Park 2016-09
+ 	CSS 적용순서 : 아이디 > 태그와 클래스 > 클래스 > 태그
+	CSS 선택자 선언순서 : Type Selector, Layout Selector, Class Selector, Etc
+	CSS 속성 선언순서 : display, position, float/clear, overflow, width/height, margin/padding, border, background, color/font, align, etc 
+--------------------------------------------------------------------------------------------------------------------------------------------*/
+
+
+/* Placeholder */
+.input_wrap.placeholder input {background:transparent;}
+.input_wrap.placeholder input:focus {background:#ffffff;}
+.input_wrap.placeholder input[value^=''] {background:#ffffff;}
+.input_wrap.placeholder label {display:inline-block; *display:inline; *zoom:1; position:absolute; left:0px; top:0px;}

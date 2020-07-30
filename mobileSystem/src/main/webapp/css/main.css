@@ -1,0 +1,36 @@
+@import url(//fonts.googleapis.com/earlyaccess/notosanskr.css);
+
+#searchModalPage .page__content{
+	overflow: scroll;
+	-webkit-overflow-scrolling: touch;
+}
+
+#crossModalPage .page__content{
+	overflow: scroll;
+	-webkit-overflow-scrolling: touch;
+}
+
+#imageInfoModal .page__content{
+	overflow: scroll;
+	-webkit-overflow-scrolling: touch;
+}
+
+.page--full_bg__background {
+	background-image: url('../images/m_main_bg.png');
+	background-repeat: no-repeat;
+	background-size: 100% 100%;
+}
+
+.notosanskr { font-family: 'Noto Sans KR', sans-serif !important; }
+
+.notosanskr-m {
+	font-family: 'Noto Sans KR', sans-serif !important;
+	font-size: 25px;
+	font-weight: 500;
+}
+
+.notosanskr-b { 
+	font-family: 'Noto Sans KR', sans-serif !important;
+	font-size: 25px;
+	font-weight: 700;
+}
