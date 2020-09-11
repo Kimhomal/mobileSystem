@@ -274,9 +274,9 @@ ons-carousel[fullscreen] {
   width: 100%;
 }
 
-.ons-ios-scroll-fix .page:not(.page--wrapper)[shown] > .page__content {
+/* .ons-ios-scroll-fix .page:not(.page--wrapper)[shown] > .page__content {
   overflow-y: hidden;
-}
+} */
 .ons-ios-scroll-fix ons-splitter-side > .page:not(.page--wrapper)[shown] > .page__content {
   overflow-y: auto;
 }

@@ -86,7 +86,7 @@
 			noProxyWfs : "http://1.234.21.200:8062/geoserver/gb/wfs",
 			proxyBackground : "",
 //			proxyBackground : G.baseUrl + "map/proxy/proxyBackground.do?url=",
-			workspace : "am",
+			workspace : "gb",
 			facilityCrsCode : "EPSG:5187",
 
 			initBaseMap : "VWorld",

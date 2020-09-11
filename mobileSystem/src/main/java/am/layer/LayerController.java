@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -46,9 +48,9 @@ public class LayerController {
      */
     @RequestMapping(value = "/layer/getHcsList", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ModelMap getHcsList(@RequestParam HashMap<String, Object> params, ModelMap model) throws Exception {
-    	String[] showList = {"ftr_idn", "ftr_cde", "pip_lbl", "x", "y", "type"};
+    	String[] showList = {"ftr_idn", "ftr_cde", "saa_cde", "pip_lbl", "x", "y", "type"};
     	
-		List<?> roadList = masterService.getRoadHcsList(params);
+    	HashMap<String, Object> roadList = masterService.getRoadHcsList(params);
 		List<?> pipeResult = masterService.getHcsList(params);
 		
 		List<HashMap<String, Object>> pipeList = new ArrayList<HashMap<String, Object>>();
@@ -115,7 +117,9 @@ public class LayerController {
     public ModelMap uploadImage(@RequestParam HashMap<String, Object> params, ModelMap model, HttpSession session, HttpServletRequest request) throws Exception {
     	AuthVO auth = (AuthVO) session.getAttribute("authInfo");
         String userId = auth.getUserId();
+        String userNm = auth.getUserNm();
         params.put("userId", userId);
+        params.put("userNm", userNm);
         
         HashMap<String, Object> jsonMap = new HashMap<String, Object>();
         
@@ -193,6 +197,60 @@ public class LayerController {
         jsonMap.put("result", values);
         jsonMap.put("fields", fields);
 
+        model.addAttribute("jsonView", jsonMap); // JSON으로 리턴하기 위해서는 모델키를 'jsonView'로 지정해야함
+
+        return model;
+    }
+    
+    /**
+     * 사용자별 사진 입력 정보 가져오기
+     *
+     * @param params
+     * @param model
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/layer/getImageInfoList", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE })
+    public ModelMap getImageInfoList(@RequestParam HashMap<String, Object> params, ModelMap model, HttpSession session, HttpServletRequest request) throws Exception {
+    	AuthVO auth = (AuthVO) session.getAttribute("authInfo");
+        String userId = auth.getUserId();
+        params.put("userId", userId);
+        
+    	List<?> list = masterService.getImageInfoList(params);
+
+        HashMap<String, Object> jsonMap = new HashMap<String, Object>();
+        jsonMap.put("list", list);
+
+        model.addAttribute("jsonView", list); // JSON으로 리턴하기 위해서는 모델키를 'jsonView'로 지정해야함
+
+        return model;
+    }
+    
+    /**
+     * 사진 입력 정보 갱신
+     *
+     * @param params
+     * @param model
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/layer/updateImageInfo", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE })
+    public ModelMap updateImageInfo(@RequestParam HashMap<String, Object> params, ModelMap model, HttpSession session, HttpServletRequest request) throws Exception {
+    	AuthVO auth = (AuthVO) session.getAttribute("authInfo");
+        String userId = auth.getUserId();
+        String userNm = auth.getUserNm();
+        params.put("userId", userId);
+        params.put("userNm", userNm);
+        
+        HashMap<String, Object> jsonMap = new HashMap<String, Object>();
+        
+        try {
+            masterService.updateImageInfo(params, request); // tbl_result_repot
+            jsonMap.put("respFlag", "Y");
+        } catch (Exception e) {
+            jsonMap.put("respFlag", "N");
+        }
+        
         model.addAttribute("jsonView", jsonMap); // JSON으로 리턴하기 위해서는 모델키를 'jsonView'로 지정해야함
 
         return model;

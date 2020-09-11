@@ -88,8 +88,11 @@
 			var reqParams = {
 				LAYERS : lyrName,
 				VERSION : '1.1.0',
-				QUERY_LAYERS: lyrName,
+//				QUERY_LAYERS: lyrName,
 				FORMAT : "image/png",
+//				STYLE : '',
+//				SLD_BODY : "<StyledLayerDescriptor version='1.0.0' xsi:schemaLocation='http://www.opengis.net/sld StyledLayerDescriptor.xsd' xmlns='http://www.opengis.net/sld' xmlns:ogc='http://www.opengis.net/ogc' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'><NamedLayer><UserStyle><Title>Default Point</Title><Abstract>A sample style that draws a point</Abstract><FeatureTypeStyle><Rule><Name>swl_manh_ps</Name><Title>swl_manh_ps</Title><PointSymbolizer><Graphic><ExternalGraphic><OnlineResource xlink:type='simple' xlink:href='swl_manh_ps.png' /><Format>image/png</Format></ExternalGraphic><Size>15</Size></Graphic></PointSymbolizer><TextSymbolizer><Label><ogc:PropertyName>pip_dep</ogc:PropertyName></Label><Font><CssParameter name='font-family'>Arial</CssParameter><CssParameter name='font-size'>12</CssParameter><CssParameter name='font-style'>normal</CssParameter><CssParameter name='font-weight'>bold</CssParameter></Font><LabelPlacement><PointPlacement><AnchorPoint><AnchorPointX>0.5</AnchorPointX><AnchorPointY>0.0</AnchorPointY></AnchorPoint><Displacement><DisplacementX>0</DisplacementX><DisplacementY>25</DisplacementY></Displacement><Rotation>-45</Rotation></PointPlacement></LabelPlacement></TextSymbolizer></Rule></FeatureTypeStyle></UserStyle></NamedLayer></StyledLayerDescriptor>"
+//				SLD_BODY : ''
 			};
 			if(params.kind == "allBasic") {
 				reqParams =  $.extend({},reqParams, {LAYERS : lyrName, QUERY_LAYERS : lyrName});
@@ -109,7 +112,8 @@
 				source : new ol.source.TileWMS({
 //					projection: this._mapMaker.config.facilityCrsCode,
 					projection: this._mapMaker.map.getView().getProjection(),
-					url : this._mapMaker.config.proxyWms,
+//					url : this._mapMaker.config.proxyWms,
+					url : this._mapMaker.config.noProxyWms,
 					params : reqParams,
 //					cacheSize: 256,
 					serverType : "geoserver"

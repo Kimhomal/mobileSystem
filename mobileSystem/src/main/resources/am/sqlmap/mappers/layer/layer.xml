@@ -12,13 +12,13 @@
 	
 	<select id="getHcsList" parameterType="map" resultType="hashMap">
 	<![CDATA[
-		SELECT ST_DISTANCE(GEOM, #{pointGeom}) AS x, FTR_CDE, FTR_IDN, PIP_DIP AS y, low_dep AS l, hgh_dep AS h, 'WTL' AS type, 'WTL_PIPE_LM' AS name, ST_DISTANCE(GEOM, #{lastGeom}) AS lx, PIP_LBL
+		SELECT ST_DISTANCE(GEOM, #{pointGeom}) AS x, FTR_CDE, FTR_IDN, SAA_CDE AS saa_cde, PIP_DIP AS y, low_dep AS l, hgh_dep AS h, 'WTL' AS type, 'WTL_PIPE_LM' AS name, ST_DISTANCE(GEOM, #{lastGeom}) AS lx, PIP_LBL
 		FROM   WTL_PIPE_LM 
 		WHERE  ST_INTERSECTS(GEOM, #{geom})
 		
 		UNION ALL
 		
-		SELECT ST_DISTANCE(GEOM, #{pointGeom}) AS x, FTR_CDE, FTR_IDN, PIP_DIP AS y, beg_dep AS l, end_dep AS h,'SWL' AS type, 'SWL_PIPE_LM' AS name, ST_DISTANCE(GEOM, #{lastGeom}) AS lx, PIP_LBL
+		SELECT ST_DISTANCE(GEOM, #{pointGeom}) AS x, FTR_CDE, FTR_IDN, SBA_CDE AS saa_cde, PIP_DIP AS y, beg_dep AS l, end_dep AS h,'SWL' AS type, 'SWL_PIPE_LM' AS name, ST_DISTANCE(GEOM, #{lastGeom}) AS lx, PIP_LBL
 		FROM   SWL_PIPE_LM
 		WHERE  ST_INTERSECTS(GEOM, #{geom})
 	ORDER BY x
@@ -26,13 +26,25 @@
 	]]>
 	</select>
 	
-	<select id="getRoadHcsList" parameterType="map" resultType="egovMap">
+	<select id="getCenterRoadList" parameterType="map" resultType="egovMap">
 	<![CDATA[
-
 		SELECT ST_DISTANCE(GEOM, #{pointGeom}) AS x, FTR_CDE, RDL_WID, 'RDL' AS type, 'RDL_RBLN_LS' AS name
 		FROM   RDL_CTLR_LS
 		WHERE  ST_INTERSECTS(GEOM, #{geom})
-		order by x
+		ORDER BY x
+	]]>
+	</select>
+	
+	<select id="getPaveRoadList" parameterType="map" resultType="egovMap">
+	<![CDATA[
+		
+		SELECT 
+			ST_DISTANCE(ST_STARTPOINT(ST_INTERSECTION(GEOM, #{geom})), #{pointGeom}) AS start,
+			ST_DISTANCE(ST_ENDPOINT(ST_INTERSECTION(GEOM, #{geom})), #{pointGeom}) AS end,
+			*
+		FROM   RDL_PAVE_AS
+		WHERE  ST_INTERSECTS(GEOM, #{geom})
+		ORDER BY start
 	]]>
 	</select>
 	
@@ -48,7 +60,8 @@
 			GEOM,
 			FILE_TITLE,
 			FILE_DESC,
-			SV_FILE_NM)
+			SV_FILE_NM,
+			FILE_INFO)
 		VALUES (
 			#{fileNm},
 			#{filePath},
@@ -58,7 +71,8 @@
 			st_geomfromtext(#{geom}),
 			#{fileTitle},
 			#{fileDesc},
-			#{svFileNm} )
+			#{svFileNm},
+			#{fileInfo})
 	]]>
 	</insert>
 	
@@ -78,4 +92,44 @@
 		WHERE GID = ${id}
     ]]>
 	</select>
+	
+	<!-- 이미지 입력 정보 가져오기 -->
+    <select id="getImageInfoList" parameterType="map" resultType="egovMap">
+	<![CDATA[
+		SELECT *
+		FROM IMG_USER_OPT
+		WHERE USER_ID = #{userId}
+    ]]>
+	</select>
+	
+	<!-- [이미지 입력 정보 업로드] -->
+    <insert id="insertImageInfoList" parameterType="map">
+	<![CDATA[
+		INSERT INTO PUBLIC.IMG_USER_OPT (
+			OPT_NM,
+			USER_ID,
+			USER_NM,
+			USER_OPT,
+			REG_YMD,
+			UPT_YMD)
+		VALUES (
+			#{userNm},
+			#{userId},
+			#{userNm},
+			#{fileInfo},
+			now(),
+			now())
+	]]>
+	</insert>
+	
+	<!-- [이미지 입력 정보 갱신] -->
+    <update id="updateImageInfoList" parameterType="map">
+        <![CDATA[
+			UPDATE PUBLIC.IMG_USER_OPT
+			SET
+				USER_OPT = #{fileInfo},
+				UPT_YMD = now()
+			WHERE USER_ID = #{userId}
+		]]>
+    </update>
 </mapper>

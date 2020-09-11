@@ -7,10 +7,6 @@
 		}
 	}
 	
-	var DATABASE = 'gb';
-	var GEOSERVERURL = gp.proxyPath + 'http://1.234.21.200:8062/geoserver';
-	var GETLEGENDGRAPHIC = '/wms?REQUEST=GetLegendGraphic&VERSION=1.1.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER=';
-	
 	function requestData(url, param, method, dataType, contentType, noShowLoading, noContext) {
 			// if (noShowLoading) this.showLoading(true);
 			if (typeof method == "undefined" || method == "") {
@@ -142,89 +138,6 @@
 		alert(`ERROR(${e.code}): ${e.message}`);
 	}
 	
-	function setTree() {
-		var connString = "__";
-		
-		$.ajax({
-			url: gp.ctxPath + '/layer/getLayerList.json',
-			type: "POST",
-			dataType: "json", // 응답받을 타입
-			error: function (xhs, status, error) {
-				if (xhs.status == 600) {
-					alert("세션이 만료되었습니다.");
-					location.href = gp.ctxPath + "/mainPage.do";
-				} else {
-					alert('서버와의 통신에 실패했습니다.');
-				}
-			},
-			success: function (responseData, textStatus) {
-				
-				$.each(responseData.layers, function (key, val) {
-					
-					var id = val.tableNm;
-					var name = val.layerNm;
-					var visible = val.visible;
-					var layerId = val.layerId;
-					
-					var html = '';
-					var target = undefined;
-					var className = undefined;
-					
-					if(layerId.includes('WTL')){
-						// 상수시설물
-						target = $('#searchModalPage .layer-wtl');
-						className = 'wtl-checkbox';
-					} else if(layerId.includes('SWL')){
-						// 하수시설물
-						target = $('#searchModalPage .layer-swl');
-						className = 'swl-checkbox';
-					} else if(layerId.includes('RDL')){
-						// 도로시설물
-						target = $('#searchModalPage .layer-rdl');
-						className = 'rdl-checkbox';
-					} else {
-						// 기타시설물
-						target = $('#searchModalPage .layer-etc');
-						className = 'etc-checkbox';
-					}
-					
-					if(target){
-						html += '<ons-list-item tappable>';
-						html += '<label class="left">';
-						html += '<ons-checkbox class="' + className + '" input-id="' + id + '" ' + (visible === 'true' ? 'checked' : '') + '></ons-checkbox>';
-						html += '</label>';
-						html += '<label for="' + id + '" class="center">';
-						html += name;
-						html += '</label>';
-						html += '<label class="right">';
-						html += '<img class="list-item__thumbnail" src="' + GEOSERVERURL + GETLEGENDGRAPHIC + DATABASE + ':' +id.toLowerCase() + '">';
-						html += '</label>';
-						html += '</ons-list-item>';
-						
-						target.append(html);
-					}
-				});
-			}
-		});
-	}
-	
-	function setEventTree() {
-		var map = mapMaker1.map;
-		var wmsLayerGroup = map.getLayerGroup();
-		var wmsLayerArray = wmsLayerGroup.getLayers().getArray();
-
-		// set default checked for 정예R, 정예Y (판독완료) layers
-		$(document).on("change", "input[type=checkbox]", function () {
-			var lyrId = $(this).attr("id");
-			var temp = mapMaker1.mapLayerMng.getLayerById(lyrId);
-			
-			if(temp){
-				temp.setVisible($(this).is(":checked"));
-			}
-			map.render();
-		});
-	}
-	
 	window.am = window.am || {};
 
 	// 전역변수
@@ -256,7 +169,7 @@
 			html += '<ons-icon icon="fa-crosshairs" onclick="am.requestPositionPermission()"></ons-icon>';
 			html += '</ons-speed-dial-item>';
 			html += '<ons-speed-dial-item>';
-			html += '<ons-icon icon="fa-filter" onclick="am.showDetailSearch()"></ons-icon>';
+			html += '<ons-icon icon="fa-filter" id="layerFilterBtn"></ons-icon>';
 			html += '</ons-speed-dial-item>';
 			html += '<ons-speed-dial-item>';
 			html += '<ons-icon icon="fa-layer-group" onclick="am.crossPrompt()"></ons-icon>';
@@ -442,41 +355,6 @@
 		modal.show();
 	}
 	
-	window.am.showDetailSearch = function(){
-		var modal = document.getElementById('search-modal');
-		modal.show();
-	}
-	
-	window.am.hideDetailSearch = function(){
-		var modal = document.getElementById('search-modal');
-		modal.hide();
-	}
-	
-	window.am.applyDetailSearch = function(){
-		$('#searchModalPage input:not(:checked)').each(function(index, element){
-			var lyrId = element.id;
-			var temp = mapMaker1.mapLayerMng.getLayerById(lyrId);
-			
-			if(temp){
-				temp.setVisible(false);
-			}
-		});
-		
-		$('#searchModalPage input:checked').each(function(index, element){
-			var lyrId = element.id;
-			var temp = mapMaker1.mapLayerMng.getLayerById(lyrId);
-			
-			if(temp){
-				temp.setVisible(true);
-			}
-		});
-		
-		mapMaker1.map.render();
-		
-		var modal = document.getElementById('search-modal');
-		modal.hide();
-	}
-	
 	// onsen ui page element ready event
 	document.addEventListener('init', function(event) {
 		var page = event.target;
@@ -582,7 +460,9 @@
 			
 			mapMaker1.map.addLayer(am.statics.vectorLayer);
 			
-			setTree();
+			am.statics.layerSection = new am.LayerFilter({
+				map: mapMaker1.map
+			});
 			
 			am.statics.crossSection = new am.crossSection({
 				map: mapMaker1.map

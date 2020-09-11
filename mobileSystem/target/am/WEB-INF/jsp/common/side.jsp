@@ -4,7 +4,7 @@
 	<ons-page>
 		<ons-list>
 			<ons-list-item onclick="location.href='<c:url value='/mainPage.do'/>'" tappable>
-				<img src="<c:url value='/images/logo/logo.png'/>" alt="gwangju icon">
+				<img src="<c:url value='/images/logo/810456-68079.png'/>" style="width: 7em;" alt="gwangju icon">
 			</ons-list-item>
 			<ons-list-item onclick="location.href='<c:url value='/layer/map.do'/>'" tappable>지도</ons-list-item>
 		</ons-list>

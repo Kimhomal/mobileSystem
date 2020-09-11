@@ -73,7 +73,7 @@
 		<error-code>500</error-code>
 		<location>/error/error-500.do</location>
 	</error-page>
-	<!-- <security-constraint>
+	<security-constraint>
         <web-resource-collection>
             <web-resource-name>HTTP</web-resource-name>
             <url-pattern>/*</url-pattern>
@@ -81,5 +81,5 @@
         <user-data-constraint>
             <transport-guarantee>CONFIDENTIAL</transport-guarantee>
         </user-data-constraint>
-    </security-constraint> -->
+    </security-constraint>
 </web-app>

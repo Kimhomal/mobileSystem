@@ -5,6 +5,14 @@
 (function(window, $) {
 	'use strict';
 	
+	var INPUTDEFAULT = [
+		{field: '공사명', value: ''},
+		{field: '공종', value: ''},
+		{field: '위치', value: ''},
+		{field: '내용', value: ''},
+		{field: '일자', value: ''}
+	]
+	
 	var camera = function(options){
 		var that = this;
 		var opt = options || {};
@@ -129,7 +137,7 @@
 		this.input_ = $('#' + inputId);
 		this.form_ = $('#uploadImage');
 		
-		createDialog();
+		createModal();
 		createImageInfoModal();
 		this.updateFeatures();
 		this.activeClickEvent();
@@ -148,8 +156,9 @@
 		this.cameraVector_.setMap(null); // 현재 위치 아이콘 레이어 비활성화
 		this.removePositionButton_();
 		this.input_.val("");
+		$('#saveInfoCheckbox').prop('checked', false);
 		
-		var dialog = document.querySelector('#my-dialog');
+		var dialog = document.querySelector('#image-modal');
 		if(dialog){
 			dialog.hide();
 		}
@@ -193,7 +202,31 @@
         };
 
 		$('#fileTitle').val($('#imageTitleInput').val());
-		$('#fileDesc').val($('#iamgeDescInput').val());
+		$('#fileDesc').val($('#imageDescInput').val());
+		
+		if($('#saveInfoCheckbox').prop('checked')){
+			$('#infoSave').val('true');
+		} else {
+			$('#infoSave').val('false');
+		}
+		
+		var jsonb = {};
+		$('#imageModalPage table tr.disable-tr').each(function(index, el){
+			var key, value;
+			var inputs = el.getElementsByTagName('ons-input');
+			if(inputs.length === 2){
+				key = inputs.item(0).value;
+				value = inputs.item(1).value;
+				
+				if(!key){
+					return;
+				}
+				
+				jsonb[index] = {key: key, value: value};
+			}
+		});
+		$('#fileInfo').val(JSON.stringify(jsonb));
+		
 		var wkt = 'POINT(' + this.position_[0] + ' ' + this.position_[1] + ')';
 		$('#geom').val(wkt);
 		
@@ -223,7 +256,7 @@
 			callback: function(index){
 				switch(index){
 					case 0:
-						that.showInfoDialog();
+						that.showInfoModal();
 						break;
 					case 1:
 						that.activePositionSelect();
@@ -279,7 +312,7 @@
 			$('body').append(html);
 			
 			$('#positionButton').on('click', function(){
-				that.showInfoDialog();
+				that.showInfoModal();
 			})
 		}
 	}
@@ -293,14 +326,63 @@
 		}
 	}
 	
-	camera.prototype.showInfoDialog = function(){
-		var dialog = document.querySelector('#my-dialog');
+	camera.prototype.showInfoModal = function(){
+		var dialog = document.querySelector('#image-modal');
 		
 		if(dialog){
+			this.updateInputTable();
 			dialog.show();
-		} else {
+		} /*else {
 			ons.createElement('dialog.html', {append: true}).then(function(dialog){
 				dialog.show();
+			});
+		}*/
+	}
+	
+	camera.prototype.updateInputTable = function(){
+		var dialog = document.querySelector('#image-modal');
+		
+		var tbody;
+		if(dialog){
+			tbody = dialog.querySelector('tbody');
+			tbody.remove();
+			
+			$.ajax({
+				url: gp.ctxPath + '/layer/getImageInfoList.json',
+				type: "POST",
+				dataType: "json", // 응답받을 타입
+				error: function (xhs, status, error) {
+					if (xhs.status == 600) {
+						alert("세션이 만료되었습니다.");
+						location.href = gp.ctxPath + "/mainPage.do";
+					} else {
+						alert('서버와의 통신에 실패했습니다.');
+					}
+				},
+				success: function (responseData, textStatus) {
+					console.log(responseData);
+					var object;
+					var html = '';
+					
+					html += '<tbody>';
+					
+					if(responseData.length){
+						object = JSON.parse(responseData[0].userOpt);
+						
+						for(var i in object){
+							html += createRow(object[i].key, object[i].value);
+						}
+						
+					} else {
+						for(var i in INPUTDEFAULT){
+							html += createRow(INPUTDEFAULT[i].field, INPUTDEFAULT[i].value);
+						}
+					}
+					
+					html += '</tbody>';
+					
+					$('#image-modal table').append(html);
+				}
 			});
 		}
 	}
@@ -340,7 +422,8 @@
 							user: images[i].userId,
 							reg: images[i].regYmd,
 							upt: images[i].uptYmd,
-							base64: images[i].base64
+							base64: images[i].base64,
+							info: images[i].fileInfo
 						});
 					}
 				}
@@ -367,7 +450,7 @@
 				
 				var card;
 				for(var i in fs){
-					card = createImageCard(fs[i].get('base64'), fs[i].get('title'), fs[i].get('desc'));
+					card = createImageCard(fs[i].get('base64'), JSON.parse(fs[i].get('info')));
 					target.append(card)
 				}
 			});
@@ -404,37 +487,112 @@
 		this.imageVector_.setMap(null);
 	}
 	
-	function createDialog(){
-		if(document.querySelector('#my-dialog')){
+	function createModal(){
+		if(document.querySelector('#image-modal')){
 			return;
 		}
 		
 		var target = $('body');
 		var html = '';
-		html += '<template id="dialog.html">';
-		html += '<ons-dialog id="my-dialog">';
-		html += '<ons-page>';
-		html += '<div style="padding: 0 10px;">';
-		html += '<p>';
-		html += '<label for="imageTitleInput">제목</label>';
-		html += '<ons-input id="imageTitleInput" modifier="material" placeholder="title"></ons-input>'
-		html += '</p>';
-		html += '<p>';
-		html += '<label for="iamgeDescInput">내용</label>';
-		html += '<textarea id="iamgeDescInput" class="textarea" rows="3" placeholder="Textarea"></textarea>'
-		html += '</p>';
+//		html += '<template id="dialog.html">';
+//		html += '<ons-dialog id="image-modal">';
+//		html += '<ons-page>';
+//		html += '<div style="padding: 0 10px;">';
+//		html += '<p>';
+//		html += '<label for="imageTitleInput">제목</label>';
+//		html += '<ons-input id="imageTitleInput" modifier="material" placeholder="title"></ons-input>'
+//		html += '</p>';
+//		html += '<p>';
+//		html += '<label for="iamgeDescInput">내용</label>';
+//		html += '<textarea id="imageDescInput" class="textarea" rows="3" placeholder="Textarea"></textarea>'
+//		html += '</p>';
+//		html += '</div>';
+//		html += '<div style="text-align: center;">';
+//		html += '<p>';
+//		html += '<ons-button id="imageUploadSubmit">저장</ons-button>';
+//		html += '<ons-button id="imageUploadCancel">취소</ons-button>';
+//		html += '</p>';
+//		html += '</div>';
+//		html += '</ons-page>';
+//		html += '</ons-dialog>';
+//		html += '</template>';
+		
+		html += '<ons-modal id="image-modal" direction="up">';
+		html += '<ons-page id="imageModalPage">';
+		html += '<ons-toolbar>';
+		html += '<div class="center">이미지 정보 입력</div>';
+		html += '<div class="left">';
+		html += '<ons-toolbar-button id="imageUploadCancel" onclick="document.getElementById(' + "'image-modal'" + ').hide();">취소</ons-toolbar-button>';
 		html += '</div>';
-		html += '<div style="text-align: center;">';
-		html += '<p>';
-		html += '<ons-button id="imageUploadSubmit">저장</ons-button>';
-		html += '<ons-button id="imageUploadCancel">취소</ons-button>';
-		html += '</p>';
+		html += '<div class="right">';
+		html += '<ons-toolbar-button id="imageUploadSubmit" onclick="document.getElementById(' + "'image-modal'" + ').hide();">저장</ons-toolbar-button>';
 		html += '</div>';
+		html += '</ons-toolbar>';
+		
+		html += '<ons-card>';
+		html += '<img src="" style="width: 100%;">';
+		html += '</ons-card>';
+		
+		html += '<ons-card>';
+		html += '<ons-list>';
+		html += '<ons-list-item tappable>';
+		html += '<label class="left">';
+		html += '<ons-checkbox input-id="saveInfoCheckbox"></ons-checkbox>';
+		html += '</label>';
+		html += '<label for="saveInfoCheckbox" class="center">';
+		html += '아래의 내용을 기본값으로 설정하기';
+		html += '</label>';
+		html += '</ons-list-item>';
+		html += '</ons-list>';
+		html += '<table class="table semantic" style="margin: 0;">';
+		html += '<thead>';
+		html += '<tr>';
+		html += '<th>필드명</th>';
+		html += '<th>필드값</th>';
+		html += '<th></th>';
+		html += '</tr>';
+		html += '</thead>';
+		html += '<tbody>';
+		
+		for(var i in INPUTDEFAULT){
+			html += createRow(INPUTDEFAULT[i].field, INPUTDEFAULT[i].value);
+		}
+		
+		html += '</tbody>';
+		html += '</table>';
+		html += '<ons-button id="addTableRow" modifier="large"><ons-icon icon="fa-plus"></ons-icon></ons-button>';
+		html += '</ons-card>';
+		
 		html += '</ons-page>';
-		html += '</ons-dialog>';
-		html += '</template>';
+		html += '</ons-modal>';
 		
 		target.append(html);
+		
+		$(document).on('click', '#addTableRow', function(){
+			var html = createRow('', '');
+			
+			$('#imageModalPage tbody').append(html);
+		});
+		
+		$(document).on('click', '#imageModalPage .delete-row', function(){
+			$(this).parent().parent().remove();
+		});
+	}
+	
+	function createRow(field, value){
+		var html = '';
+		html += '<tr class="disable-tr">';
+		html += '<td>';
+		html += '<ons-input modifier="underbar" type="text" value="' + field + '" float></ons-input>';
+		html += '</td>';
+		html += '<td>';
+		html += '<ons-input modifier="underbar" type="text" value="' + value + '" float></ons-input>';
+		html += '</td>';
+		html += '<td>';
+		html += '<ons-button class="delete-row" modifier="quiet"><ons-icon icon="fa-trash-alt"></ons-icon></ons-button>';
+		html += '</td>';
+		html += '</tr>';
+		return html;
 	}
 	
 	function createFormTag(inst, inputId){
@@ -444,27 +602,49 @@
 		html += '<input type="hidden" id="userId" name="userId"/>';
 		html += '<input type="hidden" id="fileTitle" name="fileTitle" value=""/>';
 		html += '<input type="hidden" id="fileDesc" name="fileDesc" value=""/>';
+		html += '<input type="hidden" id="fileInfo" name="fileInfo" value=""/>';
 		html += '<input type="hidden" id="geom" name="geom"/>';
+		html += '<input type="hidden" id="infoSave" name="infoSave" value="false"/>';
 		html += '<input id="' + inputId + '" name="' + inputId + '" type="file" accept="image/*" style="display: none;"></input>';
 		html += '</form>';
 		target.append(html);
 		
-		$(document).on('change', 'input#' + inputId + '[type=file]', function(e){
+		$(document).on('change', 'input#' + inputId + '[type=file]', function(){
 			inst.requestPositionPermission_();
+			
+			if(this.files && this.files[0]){
+				var reader = new FileReader();
+				
+				reader.onload = function(e){
+					$('#imageModalPage img').attr('src', e.target.result);
+				}
+				
+				reader.readAsDataURL(this.files[0]);
+			}
 		});
 	}
 	
-	function createImageCard(src, title, desc){
+	function createImageCard(src, info){
 		var html = '';
 		
 		html += '<ons-card>';
 		html += '<img src="' + src + '" style="width: 100%;">';
-		html += '<div class="title">';
-		html += title;
-		html += '</div>';
-		html += '<div class="content">';
-		html += desc;
-		html += '</div>';
+		
+		if(info instanceof Object){
+			html += '<table class="table semantic" style="margin: 0;">';
+			html += '<tbody>';
+			
+			for(var i in info){
+				html += '<tr class="disable-tr">';
+				html += '<td>' + info[i].key + '</td>';
+				html += '<td>' + info[i].value + '</td>';
+				html += '</tr>';
+			}
+			
+			html += '</tbody>';
+			html += '</table>';
+		}
+		
 		html += '</ons-card>';
 		
 		return html;

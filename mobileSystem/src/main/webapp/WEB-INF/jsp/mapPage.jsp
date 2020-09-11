@@ -26,7 +26,7 @@
 	<link rel="stylesheet" type="text/css" href="<c:url value='/css/map/facilMap.css'/>">
 	<link rel="stylesheet" type="text/css" href="<c:url value='/css/map/ol-new.css'/>">
 	<link rel="stylesheet" type="text/css" href="<c:url value='/css/semantic.css'/>">
-	<link rel="stylesheet" type="text/css" href="<c:url value='/plugins/d3/d3.css'/>">
+	<%-- <link rel="stylesheet" type="text/css" href="<c:url value='/plugins/d3/d3.css'/>"> --%>
 	
 	<script type="text/javascript">
 		var G = {};
@@ -42,8 +42,11 @@
 	<script src="<c:url value="/plugins/jquery/jquery-1.12.3.min.js"/>"></script>
 	<script src="<c:url value="/plugins/jquery/jquery.form.min.js"/>"></script>
 	<script src="<c:url value="/plugins/onsenui/js/onsenui.min.js"/>"></script>
-	<script src="<c:url value="/plugins/d3/d3.js"/>"></script>
-	<script src="<c:url value="/plugins/twojs/two.js"/>"></script>
+	<%-- <script src="<c:url value="/plugins/d3/d3.js"/>"></script> --%>
+	<script src="<c:url value="/plugins/amcharts4/core.js"/>"></script>
+	<script src="<c:url value="/plugins/amcharts4/charts.js"/>"></script>
+	<script src="<c:url value="/plugins/amcharts4/themes/animated.js"/>"></script>
+	<script src="<c:url value="/js/layerFilter.js"/>"></script>
 	<script src="<c:url value="/js/cross.js"/>"></script>
 	<script src="<c:url value="/js/camera.js"/>"></script>
 	<script src="<c:url value="/js/imageFeatures.js"/>"></script>
@@ -146,64 +149,6 @@
 		<input type="hidden" id="itptCenterY" name="itptCenterY" value="${itptCenterY}">
 	</form:form>
 
-	<ons-modal id="search-modal" direction="up">
-		<ons-page id="searchModalPage">
-			<ons-toolbar>
-				<div class="left">
-					<ons-toolbar-button onclick="am.hideDetailSearch()">취소</ons-toolbar-button>
-				</div>
-				<div class="center">레이어 필터</div>
-				<div class="right">
-					<ons-toolbar-button onclick="am.applyDetailSearch()">적용</ons-toolbar-button>
-				</div>
-			</ons-toolbar>
-			<ons-list>
-				<ons-list-item expandable>
-					<div class="left">
-						상수
-					</div>
-					<div class="center">
-						<ons-switch class="layer-wtl-switch" checked></ons-switch>
-					</div>
-					<div class="expandable-content layer-wtl">
-					</div>
-				</ons-list-item>
-				<ons-list-item expandable>
-					<div class="left">
-						하수
-					</div>
-					<div class="center">
-						<ons-switch class="layer-swl-switch"></ons-switch>
-					</div>
-					<div class="expandable-content layer-swl">
-					</div>
-				</ons-list-item>
-				
-				<ons-list-item expandable>
-					<div class="left">
-						도로
-					</div>
-					<div class="center">
-						<ons-switch class="layer-rdl-switch"></ons-switch>
-					</div>
-					<div class="expandable-content layer-rdl">
-					</div>
-				</ons-list-item>
-				
-				<ons-list-item expandable>
-					<div class="left">
-						기타
-					</div>
-					<div class="center">
-						<ons-switch class="layer-etc-switch"></ons-switch>
-					</div>
-					<div class="expandable-content layer-etc">
-					</div>
-				</ons-list-item>
-			</ons-list>
-		</ons-page>
-	</ons-modal>
-	
 	<ons-modal id="detail-modal" direction="up">
 		<ons-page id="detailModalPage">
 			<ons-toolbar>
@@ -222,19 +167,6 @@
 					</tr>
 				</tbody>
 			</table>
-		</ons-page>
-	</ons-modal>
-	
-	<ons-modal id="cross-modal" direction="up">
-		<ons-page id="crossModalPage">
-			<ons-toolbar>
-				<div class="center">횡단면도</div>
-				<div class="right">
-					<ons-toolbar-button onclick="document.getElementById('cross-modal').hide();">닫기</ons-toolbar-button>
-				</div>
-			</ons-toolbar>
-			<div id="crossSectionCanvas" style="/* width:100%; height:40%; */"></div>
-			<table id="crossSectionTable" class="table semantic" style="margin: 0;"></table>
 		</ons-page>
 	</ons-modal>
 	

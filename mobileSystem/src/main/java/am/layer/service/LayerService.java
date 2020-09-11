@@ -17,7 +17,7 @@ public interface LayerService {
     
     public List<?> getHcsList(HashMap<String, Object> params) throws Exception;
     
-	public List<?> getRoadHcsList(HashMap<String, Object> params) throws Exception;
+	public HashMap getRoadHcsList(HashMap<String, Object> params) throws Exception;
 	
 	public void uploadImage(HashMap<String, Object> params, HttpServletRequest request) throws Exception;
 	
@@ -26,4 +26,10 @@ public interface LayerService {
     
     // 객체 정보 조회
     public HashMap getFeatureInfo(HashMap<String, Object> params) throws Exception;
+    
+    // 사용자별 사진 입력 정보 가져오기
+    public List<?> getImageInfoList(HashMap<String, Object> params) throws Exception;
+    
+    // 사진 입력 정보 갱신
+    public void updateImageInfo(HashMap<String, Object> params, HttpServletRequest request) throws Exception;
 }

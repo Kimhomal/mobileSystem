@@ -63,7 +63,7 @@
 				</div>
 
 				<div class="center">
-					<img onclick="am.load('mainPage.jsp')" src="<c:url value='/images/logo/kb_logo.png'/>" alt="gwangju icon" style="width: 8em;">
+					<img onclick="am.load('mainPage.jsp')" src="<c:url value='/images/logo/810456-68079.png'/>" alt="gwangju icon" style="width: 8em;">
 				</div>
 				
 				<div class="right">

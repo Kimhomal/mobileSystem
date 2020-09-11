@@ -37,18 +37,23 @@ public class LayerServiceImpl implements LayerService {
 		return masterMapper.getHcsList(params);
 	}
 	@Override
-	public List<?> getRoadHcsList(HashMap<String, Object> params) throws Exception {
-		return masterMapper.getRoadHcsList(params);
+	public HashMap getRoadHcsList(HashMap<String, Object> params) throws Exception {
+		HashMap<String, Object> jsonMap = new HashMap<String, Object>();
+		jsonMap.put("centerRoad", masterMapper.getCenterRoadList(params));
+		jsonMap.put("paveRoad", masterMapper.getPaveRoadList(params));
+		return jsonMap;
 	}
 	
 	@Override
 	public void uploadImage(HashMap<String, Object> params, HttpServletRequest request) throws Exception {
+		String saveOpt = (String) params.get("infoSave");
+		if(saveOpt.equals("true")) {
+			updateImageInfo(params, request);
+		}
+		
 		final Map<String, MultipartFile> files = ((MultipartHttpServletRequest) request).getFileMap();
-
         Iterator<Map.Entry<String, MultipartFile>> itr = files.entrySet().iterator();
-
         int fileNo = 0;
-
         while (itr.hasNext()) {
             String saveFileName = "IMAGE" + ComDateUtils.getCurDate("yyMMddHHmmss") + fileNo;
             fileNo++;
@@ -83,5 +88,25 @@ public class LayerServiceImpl implements LayerService {
     	HashMap results = masterMapper.getFeatureInfo(params);
     	
     	return results;
+    }
+    
+    // 사용자별 사진 입력 정보 가져오기
+    @Override
+    public List<?> getImageInfoList(HashMap<String, Object> params) throws Exception {
+    	return masterMapper.getImageInfoList(params);
+    }
+    
+    // 사진 입력 정보 갱신
+    @Override
+    public void updateImageInfo(HashMap<String, Object> params, HttpServletRequest request) throws Exception{
+    	List<?> infoList = getImageInfoList(params);
+    	
+    	if(infoList.isEmpty()) {
+    		// 사용자 정의 입력 정보가 존재하지않을 때 새로 입력
+    		masterMapper.insertImageInfoList(params);
+    	} else {
+    		// 사용자 정의 입력 정보가 존재할 때 갱신
+    		masterMapper.updateImageInfoList(params);
+    	}
     }
 }

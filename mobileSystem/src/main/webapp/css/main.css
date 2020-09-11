@@ -1,6 +1,6 @@
 @import url(//fonts.googleapis.com/earlyaccess/notosanskr.css);
 
-#searchModalPage .page__content{
+/* #searchModalPage .page__content{
 	overflow: scroll;
 	-webkit-overflow-scrolling: touch;
 }
@@ -10,10 +10,15 @@
 	-webkit-overflow-scrolling: touch;
 }
 
+#imageModalPage .page__content{
+	overflow: scroll;
+	-webkit-overflow-scrolling: touch;
+}}
+
 #imageInfoModal .page__content{
 	overflow: scroll;
 	-webkit-overflow-scrolling: touch;
-}
+} */
 
 .page--full_bg__background {
 	background-image: url('../images/m_main_bg.png');
@@ -33,4 +38,8 @@
 	font-family: 'Noto Sans KR', sans-serif !important;
 	font-size: 25px;
 	font-weight: 700;
+}
+
+ons-fab.fab.active, ons-speed-dial-item.fab.active, button.fab.active {
+	background-color: #00ff1f;
 }
