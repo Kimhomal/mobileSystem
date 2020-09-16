@@ -46,6 +46,7 @@
 	<script src="<c:url value="/plugins/amcharts4/core.js"/>"></script>
 	<script src="<c:url value="/plugins/amcharts4/charts.js"/>"></script>
 	<script src="<c:url value="/plugins/amcharts4/themes/animated.js"/>"></script>
+	<script src="<c:url value="/plugins/html2canvas/html2canvas.min.js"/>"></script>
 	<script src="<c:url value="/js/layerFilter.js"/>"></script>
 	<script src="<c:url value="/js/cross.js"/>"></script>
 	<script src="<c:url value="/js/camera.js"/>"></script>

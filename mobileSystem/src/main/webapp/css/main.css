@@ -43,3 +43,26 @@
 ons-fab.fab.active, ons-speed-dial-item.fab.active, button.fab.active {
 	background-color: #00ff1f;
 }
+
+table.preview-table {
+	background: rgba(0,0,0,0.4);
+    color: rgba(255,255,255,.8);
+	border: 1px solid rgba(0,0,0,.8);
+	border-spacing: 0;
+}
+
+table.preview-table tr:first-child td{
+	border-top: none;
+}
+
+table.preview-table tr td{
+	border-top: 1px solid rgba(0,0,0,.8);
+}
+
+table.preview-table tr th:first-child, table.preview-table tr td:first-child {
+	border-left: none;
+}
+
+table.preview-table tr th, table.preview-table tr td {
+	border-left: 1px solid rgba(0,0,0,.8);
+}

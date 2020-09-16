@@ -4,7 +4,7 @@
 	var DATABASE = 'gb';
 	var GEOSERVERURL = gp.proxyPath + 'http://1.234.21.200:8062/geoserver';
 //	var WFSURL = GEOSERVERURL + '/' + DATABASE + '/wfs';
-	var WFSURL = "http://1.234.21.200:8062/geoserver/gb/wfs";
+	var WFSURL = gp.proxyPath + "http://1.234.21.200:8062/geoserver/gb/wfs";
 	var GETLEGENDGRAPHIC = '/wms?REQUEST=GetLegendGraphic&VERSION=1.1.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER=';
 	
 	var layerFilter = function(options){
@@ -118,26 +118,33 @@
 			var id = item.id.replace(/\-select/g,'');
 			var val = item.value;
 			
-			if(val === 'none'){
-				return;
-			}
-			
-			var sld = createSLD({
-				label: val,
-				type: 'point'
-			});
 			var layers = that.map_.getLayers().getArray();
-			var source;
+			var source, sld, type;
 			for(var i in layers){
 				if(layers[i].get('id') === id){
-					debugger;
+					
+					if(id.match(/_ps$/i) !== null){
+						type = 'point';
+					} else if(id.match(/_ls|_lm$/i) !== null){
+						type = 'line';
+					} else if(id.match(/as$/i) !== null){
+						type = 'polygon';
+					} else {
+						type = 'point';
+					}
+					
+					sld = createSLD({
+						layer: id,
+						label: val,
+						type: type
+					});
+					
 					source = layers[i].getSource();
 					source.updateParams({
-						VERSION : '1.3.0',
+						VERSION : '1.1.0',
 //						QUERY_LAYERS: lyrName,
 						FORMAT : "image/png",
-						STYLES:'',
-						SLD_BODY: sld});
+						SLD_BODY: val === 'none' ? undefined : sld});
 //					break;
 					source.clear();
 				}
@@ -158,80 +165,92 @@
 		var fillOpacity = options.fillOpacity || '0.2';
 		var label = options.label || '';
 		
-		var sld = "";
-		sld += "<StyledLayerDescriptor version='1.0.0' xsi:schemaLocation='http://www.opengis.net/sld StyledLayerDescriptor.xsd' xmlns='http://www.opengis.net/sld' xmlns:ogc='http://www.opengis.net/ogc' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>";
-		sld += "<NamedLayer>";
-//		sld += "<Name>wtl_pipe_ps</Name>";
-		sld += "<UserStyle>";
-		sld += "<Title>Default Point</Title>";
-		sld += "<Abstract>A sample style that draws a point</Abstract>";
-		sld += "<FeatureTypeStyle>";
-		sld += "<Rule>";
-		sld += "<Name>wtl_pipe_ps</Name>";
-		sld += "<Title>wtl_pipe_ps</Title>";
+		var sld = '';
+		sld += '<StyledLayerDescriptor version="1.0.0" xsi:schemaLocation="http://www.opengis.net/sld StyledLayerDescriptor.xsd" xmlns="http://www.opengis.net/sld" xmlns:ogc="http://www.opengis.net/ogc" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">';
+		sld += '<NamedLayer>';
+		sld += '<Name>gb:' + options.layer + '</Name>';
+		sld += '<UserStyle>';
+		sld += '<Title>Default Point</Title>';
+		sld += '<Abstract>A sample style that draws a point</Abstract>';
+		sld += '<FeatureTypeStyle>';
+		sld += '<Rule>';
+//		sld += '<Name>wtl_pipe_ps</Name>';
+//		sld += '<Title>wtl_pipe_ps</Title>';
 		
-		if(type === "point"){
-			sld += "<PointSymbolizer>";
-			sld += "<Graphic>";
-			sld += "<ExternalGraphic>";
-			sld += "<OnlineResource xlink:type='simple' xlink:href='swl_manh_ps.png' />";
-			sld += "<Format>image/png</Format>";
-			sld += "</ExternalGraphic>";
-			sld += "<Size>15</Size>";
-			sld += "</Graphic>";
-			sld += "</PointSymbolizer>";
-		} else if(type === "line"){
-			sld += "<LineSymbolizer>";
-			sld += "<Stroke>";
-			sld += "<CssParameter name='stroke'>#ff00ff</CssParameter>";
-			sld += "<CssParameter name='stroke-width'>2</CssParameter>";
-			sld += "</Stroke>";
-			sld += "</LineSymbolizer>";
-		} else if(type === "polygon"){
-			sld += "<PolygonSymbolizer>";
-			sld += "<Fill>";
-			sld += "<CssParameter name='fill'>#FF00FF</CssParameter>";
-			sld += "<CssParameter name='fill-opacity'>0.2</CssParameter>";
-			sld += "</Fill>";
-			sld += "<Stroke>";
-			sld += "<CssParameter name='stroke'>#FF00FF</CssParameter>";
-			sld += "<CssParameter name='stroke-width'>1</CssParameter>";
-			sld += "</Stroke>";
-			sld += "</PolygonSymbolizer>";
+		if(type === 'point'){
+			sld += '<PointSymbolizer>';
+			sld += '<Graphic>';
+			sld += '<Mark>';
+			sld += '<WellKnownName>circle</WellKnownName>';
+			sld += '<Fill><CssParameter name="fill">#FF0000</CssParameter></Fill>';
+			sld += '</Mark>';
+			sld += '<Size>6</Size>';
+			sld += '</Graphic>';
+			sld += '</PointSymbolizer>';
+		} else if(type === 'line'){
+			sld += '<LineSymbolizer>';
+			sld += '<Stroke>';
+			sld += '<CssParameter name="stroke">#ff00ff</CssParameter>';
+			sld += '<CssParameter name="stroke-width">2</CssParameter>';
+			sld += '</Stroke>';
+			sld += '</LineSymbolizer>';
+		} else if(type === 'polygon'){
+			sld += '<PolygonSymbolizer>';
+			sld += '<Fill>';
+			sld += '<CssParameter name="fill">#FF00FF</CssParameter>';
+			sld += '<CssParameter name="fill-opacity">0.2</CssParameter>';
+			sld += '</Fill>';
+			sld += '<Stroke>';
+			sld += '<CssParameter name="stroke">#FF00FF</CssParameter>';
+			sld += '<CssParameter name="stroke-width">1</CssParameter>';
+			sld += '</Stroke>';
+			sld += '</PolygonSymbolizer>';
 		}
 		
 		if(label){
-			sld += "<TextSymbolizer>";
-			sld += "<Label>";
-			sld += "<ogc:PropertyName>" + label + "</ogc:PropertyName>";
-			sld += "</Label>";
-			sld += "<Font>";
-			sld += "<CssParameter name='font-family'>Arial</CssParameter>";
-			sld += "<CssParameter name='font-size'>12</CssParameter>";
-			sld += "<CssParameter name='font-style'>normal</CssParameter>";
-			sld += "<CssParameter name='font-weight'>bold</CssParameter>";
-			sld += "</Font>";
-			sld += "<LabelPlacement>";
-			sld += "<PointPlacement>";
-			sld += "<AnchorPoint>";
-			sld += "<AnchorPointX>0.5</AnchorPointX>";
-			sld += "<AnchorPointY>0.0</AnchorPointY>";
-			sld += "</AnchorPoint>";
-			sld += "<Displacement>";
-			sld += "<DisplacementX>0</DisplacementX>";
-			sld += "<DisplacementY>25</DisplacementY>";
-			sld += "</Displacement>";
-			sld += "<Rotation>-45</Rotation>";
-			sld += "</PointPlacement>";
-			sld += "</LabelPlacement>";
-			sld += "</TextSymbolizer>";
+			sld += '<TextSymbolizer>';
+			sld += '<Label>';
+			sld += '<ogc:PropertyName>' + label + '</ogc:PropertyName>';
+			sld += '</Label>';
+			sld += '<Font>';
+			sld += '<CssParameter name="font-family">Arial</CssParameter>';
+			sld += '<CssParameter name="font-size">12</CssParameter>';
+			sld += '<CssParameter name="font-style">normal</CssParameter>';
+			sld += '<CssParameter name="font-weight">bold</CssParameter>';
+			sld += '</Font>';
+			
+			if(type === 'point'){
+				sld += '<LabelPlacement>';
+				sld += '<PointPlacement>';
+				sld += '<AnchorPoint>';
+				sld += '<AnchorPointX>0.5</AnchorPointX>';
+				sld += '<AnchorPointY>0.0</AnchorPointY>';
+				sld += '</AnchorPoint>';
+//				sld += '<Displacement>';
+//				sld += '<DisplacementX>0</DisplacementX>';
+//				sld += '<DisplacementY>25</DisplacementY>';
+//				sld += '</Displacement>';
+				sld += '<Rotation>-45</Rotation>';
+				sld += '</PointPlacement>';
+				sld += '</LabelPlacement>';
+			} else if(type === 'line'){
+				sld += '<LabelPlacement><LinePlacement /></LabelPlacement>';
+				sld += '<VendorOption name="followLine">true</VendorOption>';
+				sld += '<VendorOption name="maxAngleDelta">90</VendorOption>';
+				sld += '<VendorOption name="maxDisplacement">400</VendorOption>';
+				sld += '<VendorOption name="repeat">150</VendorOption>';
+			} else if(type === 'polygon'){
+				
+			}
+			
+			sld += '</TextSymbolizer>';
 		}
 		
-		sld += "</Rule>";
-		sld += "</FeatureTypeStyle>";
-		sld += "</UserStyle>";
-		sld += "</NamedLayer>";
-		sld += "</StyledLayerDescriptor>";
+		sld += '</Rule>';
+		sld += '</FeatureTypeStyle>';
+		sld += '</UserStyle>';
+		sld += '</NamedLayer>';
+		sld += '</StyledLayerDescriptor>';
 		
 		return sld;
 	}

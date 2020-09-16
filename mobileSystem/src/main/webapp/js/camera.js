@@ -150,6 +150,36 @@
 		$(document).on('click', '#imageUploadCancel', function(){
 			that.reset();
 		});
+		
+		$(document).on('click', '#addTableRow', function(){
+			var html = createRow('', '');
+			
+			$('#imageModalPage table.semantic tbody').append(html);
+		});
+		
+		$(document).on('click', '#imageModalPage .delete-row', function(){
+			$(this).parent().parent().remove();
+		});
+		
+		$(document).on('keyup', '#imageModalPage table.semantic input', function(e){
+			var preview = $('table.preview-table tbody');
+			var tr = $('#imageModalPage table.semantic tbody tr');
+			var tempTr;
+			
+			preview.empty();
+			tr.each(function(i, t){
+				console.log(t);
+				tempTr = $('<tr>');
+				t.children.forEach(function(item){
+					var input = $(item).find('input');
+					if(!input.length){
+						return;
+					}
+					tempTr.append($('<td>').text(input.val()));
+				});
+				preview.append(tempTr);
+			});
+		});
 	}
 	
 	camera.prototype.reset = function(){
@@ -211,7 +241,7 @@
 		}
 		
 		var jsonb = {};
-		$('#imageModalPage table tr.disable-tr').each(function(index, el){
+		$('#imageModalPage table.semantic tr.disable-tr').each(function(index, el){
 			var key, value;
 			var inputs = el.getElementsByTagName('ons-input');
 			if(inputs.length === 2){
@@ -344,7 +374,7 @@
 		
 		var tbody;
 		if(dialog){
-			tbody = dialog.querySelector('tbody');
+			tbody = dialog.querySelector('table.semantic tbody');
 			tbody.remove();
 			
 			$.ajax({
@@ -381,7 +411,7 @@
 					
 					html += '</tbody>';
 					
-					$('#image-modal table').append(html);
+					$('#image-modal table.semantic').append(html);
 				}
 			});
 		}
@@ -530,7 +560,21 @@
 		html += '</ons-toolbar>';
 		
 		html += '<ons-card>';
+		html += '<div id="imageUploadPreview" style="position: relative;">';
 		html += '<img src="" style="width: 100%;">';
+		html += '<div draggable="true" style="position: absolute; bottom: 4px; right: 0;">';
+		html += '<table class="preview-table">';
+		html += '<tbody>';
+		for(var i in INPUTDEFAULT){
+			html += '<tr>';
+			html += '<td>' + INPUTDEFAULT[i].field + '</td>';
+			html += '<td>' + INPUTDEFAULT[i].value + '</td>';
+			html += '</tr>';
+		}
+		html += '</tbody>';
+		html += '</table>';
+		html += '</div>';
+		html += '</div>';
 		html += '</ons-card>';
 		
 		html += '<ons-card>';
@@ -567,16 +611,6 @@
 		html += '</ons-modal>';
 		
 		target.append(html);
-		
-		$(document).on('click', '#addTableRow', function(){
-			var html = createRow('', '');
-			
-			$('#imageModalPage tbody').append(html);
-		});
-		
-		$(document).on('click', '#imageModalPage .delete-row', function(){
-			$(this).parent().parent().remove();
-		});
 	}
 	
 	function createRow(field, value){

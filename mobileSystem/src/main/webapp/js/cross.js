@@ -245,14 +245,7 @@ var CHART = undefined;
 							modal.show();
 							
 							// 횡단면도 그래프 생성
-//							HEIGHT = document.querySelector('body').clientHeight/2;
-//							WIDTH = document.querySelector('body').clientWidth;
-//							x = d3.scaleLinear().domain(d3.extent(data, d => d.x)).nice().range([MARGIN.left, WIDTH - MARGIN.right]);
-//							y = d3.scaleLinear().domain(d3.extent(data, d => d.y) .sort((a,b) => (b-a))).nice().range([HEIGHT - MARGIN.bottom, MARGIN.top]);
-//							that.node_ = createGraph(data);
 							createAmchart(data, roadData);
-//							that.target_.empty();
-//							that.target_.append(that.node_);
 							
 							// 횡단면도 테이블 생성
 							that.updateTable({
@@ -342,7 +335,7 @@ var CHART = undefined;
 		})
 		
 		var exceptLabel = ['x']; // 제외시킬 라벨 목록
-		var offset = 5;
+		var offset = 1;
 		var maxY = 1.0;
 		var maxX = 0;
 		var distanceList = [];
@@ -406,8 +399,8 @@ var CHART = undefined;
 		valueAxisX.max = maxX + offset;
 		valueAxisX.strictMinMax = true;
 		valueAxisX.tooltip.disabled = true;
-		valueAxisX.end = 0.5; // 초기 scrollX의 end 위치(%)
-		valueAxisX.keepSelection = true; // amchart 생성 후 scrollX 위치가 초기화되는 것을 방지
+//		valueAxisX.end = 0.5; // 초기 scrollX의 end 위치(%) - 그래프가 50% 확대됨
+//		valueAxisX.keepSelection = true; // amchart 생성 후 scrollX 위치가 초기화되는 것을 방지
 		valueAxisX.title.text = '간격(m)';
 		
 		// 그래프 y축 생성
