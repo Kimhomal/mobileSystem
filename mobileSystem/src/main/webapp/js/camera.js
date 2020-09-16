@@ -168,7 +168,6 @@
 			
 			preview.empty();
 			tr.each(function(i, t){
-				console.log(t);
 				tempTr = $('<tr>');
 				t.children.forEach(function(item){
 					var input = $(item).find('input');
@@ -187,6 +186,7 @@
 		this.removePositionButton_();
 		this.input_.val("");
 		$('#saveInfoCheckbox').prop('checked', false);
+		$('#imageCapture').remove();
 		
 		var dialog = document.querySelector('#image-modal');
 		if(dialog){
@@ -201,36 +201,6 @@
 	camera.prototype.submit = function(){
 		var that = this;
 		
-		var options = {
-            url				: gp.ctxPath + '/layer/uploadImage.json',
-            type			: 'post',
-            dataType		: 'json',
-            success			:  function(json) {
-                if(json.respFlag == 'Y'){
-                    alert('정상적으로 수정되었습니다.');
-                    that.updateFeatures();
-                } else {
-                    alert("오류발생, 다시 시도하여 주십시오");
-                }
-            },
-            error : function(response) {
-                alert("오류발생, 다시 시도하여 주십시오");
-            },
-            beforeSend	: function(){
-				var modal = document.querySelector('#loadingModal');
-				if(modal){
-					modal.show();
-				}
-			},
-			complete		: function(){
-				that.reset();
-				var modal = document.querySelector('#loadingModal');
-				if(modal){
-					modal.hide();
-				}
-			}
-        };
-
 		$('#fileTitle').val($('#imageTitleInput').val());
 		$('#fileDesc').val($('#imageDescInput').val());
 		
@@ -260,7 +230,72 @@
 		var wkt = 'POINT(' + this.position_[0] + ' ' + this.position_[1] + ')';
 		$('#geom').val(wkt);
 		
-		this.form_.ajaxSubmit( options );
+		// 대장조서란이 포함된 이미지 생성
+		$('#imageCapture').remove();
+		
+		var clone = $('#imageUploadPreview').clone();
+		clone.attr('id', 'imageCapture').css({position: 'absolute'});
+		$(document.body).append(clone);
+		
+		html2canvas(document.querySelector('#imageCapture'), {backgroundColor: '#000'})
+			.then(function(canvas){
+//				var base = canvas.toDataURL('image/png');
+				var fileInput = document.querySelector('#' + that.input_.attr('id'));
+				if(!fileInput){
+					return;
+				}
+				
+				if(!fileInput.files.length){
+					return;
+				}
+				
+				var type = fileInput.files[0].type;
+				var name = fileInput.files[0].name;
+				
+				canvas.toBlob(function(blob){
+					var file = new File([blob], name, {type: type});
+					
+					that.form_.ajaxSubmit( {
+			            url				: gp.ctxPath + '/layer/uploadImage.json',
+			            type			: 'post',
+			            dataType		: 'json',
+			            success			:  function(json) {
+			                if(json.respFlag == 'Y'){
+			                    alert('정상적으로 수정되었습니다.');
+			                    that.updateFeatures();
+			                } else {
+			                    alert("오류발생, 다시 시도하여 주십시오");
+			                }
+			            },
+			            error : function(response) {
+			                alert("오류발생, 다시 시도하여 주십시오");
+			            },
+			            beforeSubmit: function(formData, jqForm, options){
+							// 저장 요청 전 리사이즈 이미지 input에 적용
+							for(var i in formData){
+								if(formData[i].name === that.input_.attr('name')){
+									formData[i].value = file;
+								}
+							}
+						},
+			            beforeSend	: function(){
+							var modal = document.querySelector('#loadingModal');
+							if(modal){
+								modal.show();
+							}
+						},
+						complete		: function(){
+							that.reset();
+							var modal = document.querySelector('#loadingModal');
+							if(modal){
+								modal.hide();
+							}
+						}
+			        } );
+				}, type);
+			})
+		
+		
 	}
 	
 	// 기기 위치 감지 허용 여부 확인
